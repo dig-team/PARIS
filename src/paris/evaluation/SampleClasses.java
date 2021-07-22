@@ -169,14 +169,16 @@ public class SampleClasses {
 
   /** Runs whatever you want to run */
   public static void main(String[] args) throws Exception {
-    //countClasses();
-    //sampleClasses(new File("c:/fabian/data/runvldb/dbpedia/superclasses1.tsv"), new File("c:/fabian/data/runvldb/dbpedia/superclasses1_sample.tsv"),114*300);
-    //sampleClasses(new File("c:/fabian/data/runvldb/dbpedia/superclasses2.tsv"), new File("c:/fabian/data/runvldb/dbpedia/superclasses2_sample.tsv"),100*300);
-    //sampleClasses(new File("c:/fabian/data/runvldb/imdb/superclasses1.tsv"), new File("c:/fabian/data/runvldb/imdb/superclasses1_sample.tsv"),75*300);
-    //sampleClasses(new File("c:/fabian/data/runvldb/imdb/superclasses2.tsv"), new File("c:/fabian/data/runvldb/imdb/superclasses2_sample.tsv"),200*300);
-    countClassesAboveThresholds(new File("c:/fabian/data/runvldb/imdb/superclasses1.tsv"));
-    //evalClasses(new File("c:/fabian/data/runvldb/imdb/superclasses1_eval.tsv"));
-    //countGoodClasses();
+  	if (args[0].equals("sample")) {
+  	  sampleClasses(new File(args[1]), new File(args[2]), new Integer(args[3]), false);  		
+  	} else if (args[0].equals("eval")) {
+  		evalClasses(new File(args[1]));
+  	} else if (args[0].equals("countAboveThresholds")) {
+  		countClassesAboveThresholds(new File(args[1]));
+  	} else {
+  		Announce.message("invalid operation:", args[0]);
+  		System.exit(1);
+  	}
   }
 
 }

@@ -1,23 +1,25 @@
 package paris;
 
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javatools.administrative.Announce;
 import javatools.datatypes.FinalMap;
-import javatools.parsers.Char;
 import javatools.parsers.DateParser;
 import javatools.parsers.NumberParser;
 
 /** This class is part of the PARIS ontology matching project at INRIA Saclay/France.
  * 
  * It is licensed under a Creative Commons Attribution Non-Commercial License
- * by the author Faban M. Suchanek (http://suchanek.name). For all further information,
+ * by the author Fabian M. Suchanek (http://suchanek.name). For all further information,
  * see http://webdam.inria.fr/paris
  *
  * This class contains the design choices for PARIS. 
  * PARIS is parameter-free in the sense that one setting should do a decent job on all
  * ontologies. If it does not, consider fiddling with these parameters. See our 
- * technical report for more details. */
+ * paper for more details. */
+
 public class Config {
 
   //-----------------------------------------------------------------------------
@@ -41,14 +43,24 @@ public class Config {
 
   /** Types of string distance used in Computed.compareStrings()*/
   public static enum LiteralDistance {
-    IDENTITY, BAGOFCHARS, NORMALIZE, BAGOFWORDS
+    IDENTITY, BAGOFCHARS, NORMALIZE, BAGOFWORDS, LEVENSHTEIN, SHINGLING, SHINGLINGLEVENSHTEIN
   };
 
   /** String distance used in Computed.compareStrings() for negative evidence.
    * Has an effect only if punish=TRUE. 
    * There is not much use tinkering with this value, leave it at the default value of IDENTITY.
    * If you need a string distance, use normalizeStrings=TRUE.*/
+  /* if you use SHINGLING or SHINGLINGLEVENSHTEIN, make sure that the fact stores were generated with the literal indexes */
   public static LiteralDistance literalDistance = LiteralDistance.IDENTITY;
+  
+  /** divide approx matches by this value */
+  public static double penalizeApproxMatches = 2.;
+  
+  /** Use literalDistance for equality (and not just for punishment). Slows things down. */
+  public static final boolean literalDistanceForEquality = true;
+  
+  /** Threshold on distance between literals to take them into account as a possible match */
+ public static final double literalDistanceThreshold = 0.5;
 
   /** Anything below this threshold is ignored. Value does not have much influence. Default is at 0.1.*/
   public static final double THETA = 0.1;
@@ -74,13 +86,43 @@ public class Config {
 
   /** If switched on, see all literal relations as weakly equivalent at value IOTA. The system will not work if you set this to FALSE. */
   public static boolean initialSmallEquivalence = true;
+  
+  /** Compress namespaces using prefixes. Might slow things down, so you might want to do it separately */
+  public static boolean performCompression = true;
+  
+  /** Initial size for large HashMap's and HashSet's */
+  public static int initialSize = 1024*1024;
 
   /** Standard namespace prefixes, add your prefixes here to simplify your life.*/
-  public static Map<String, String> prefixes = new FinalMap<String, String>("rdf:", "http://www.w3.org/1999/02/22-rdf-syntax-ns#", "rdfs:",
-      "http://www.w3.org/2000/01/rdf-schema#", "xsd:", "http://www.w3.org/2001/XMLSchema#", "owl:", "http://www.w3.org/2002/07/owl#", "dc:",
-      "http://purl.org/dc/terms/", "foaf:", "http://xmlns.com/foaf/0.1/", "vcard:", "http://www.w3.org/2006/vcard/ns#", "dbp:",
-      "http://dbpedia.org/", "y:", "http://www.mpii.de/yago/resource/", "geo:", "http://www.geonames.org/ontology#");
+  public static Map<String, String> prefixes = new FinalMap<String, String>(
+  		"http://www.w3.org/1999/02/22-rdf-syntax-ns#", "rdf:",
+  		"http://www.w3.org/2000/01/rdf-schema#", "rdfs:",
+  		"http://www.w3.org/2001/XMLSchema#", "xsd:",
+  		"http://www.w3.org/2002/07/owl#", "owl:",
+  		"http://purl.org/dc/terms/", "dc:",
+  		"http://xmlns.com/foaf/0.1/", "foaf:",
+  		"http://www.w3.org/2006/vcard/ns#", "vcard:",
+  		"http://dbpedia.org/", "dbp:",
+  		"http://www.mpii.de/yago/resource/", "y:",
+  		"http://www.geonames.org/ontology#", "geo:"
+  	);
+  
+  public static String join(String[] items, String separator) {
+    StringBuilder builder = new StringBuilder();
+    boolean first = true;
+    for (String item : items) {
+    	if (!first)
+    		builder.append(separator);
+    	first = false;
+      builder.append(item);
+    }
+    return builder.toString();
+  }
 
+  public static String[] namespaces = prefixes.keySet().toArray(new String[0]);
+  public static String namespacesDisjunct = "(" + join(namespaces, "|") + ").*";
+  public static Pattern prefixRegexp = Pattern.compile(namespacesDisjunct);
+  
   //-----------------------------------------------------------------------------
   //                   Common code
   //-----------------------------------------------------------------------------
@@ -117,7 +159,10 @@ public class Config {
           String name=normalizeString(entityName(s));
           s=pref+name;
         }
-        return compress(s);
+        if (performCompression)
+          return compress(s);
+        else
+        	return s;
     }
     return(null);
   }
@@ -147,15 +192,20 @@ public class Config {
   
   /** Guesses the type of entity*/
   public static EntityType entityType(String e) {
+    return entityType(e, EntityType.STRING);
+  }
+
+  /** Guesses the type of entity*/
+  public static EntityType entityType(String e, EntityType def) {
     if (e.startsWith("\"")) return (EntityType.STRING);
     if (e.startsWith("http://") || e.matches("[a-z0-9]{1,10}:\\S+")) return (EntityType.RESOURCE);
     if (e.length() > 0 && (e.charAt(0) == '+' || e.charAt(0) == '-' || Character.isDigit(e.charAt(0)))) {
       if (DateParser.isDate(e)) return (EntityType.DATE);
       if (NumberParser.isNumberAndUnit(e)) return (EntityType.NUMBER);
     }
-    return (EntityType.RESOURCE);
+    return def;
   }
-
+  
   /** Guesses the type of literal*/
   public static EntityType literalType(String e) {
     e=stripQuotes(e);
@@ -205,10 +255,13 @@ public class Config {
 
   /** Compresses a string by prefix*/
   public static String compress(String s) {
-    for (Map.Entry<String, String> p : prefixes.entrySet()) {
-      if (s.startsWith(p.getValue())) return (p.getKey() + s.substring(p.getValue().length()));
-    }
-    return (s);
+  	Matcher matcher = prefixRegexp.matcher(s);
+  	if (matcher.matches()) {
+  		//System.out.printf("matches %s %s for %s\n", matcher.group(1), prefixes.get(matcher.group(1)), s);
+  		String result = (prefixes.get(matcher.group(1)) + s.substring(matcher.group(1).length()));
+  		//System.out.printf(result);
+  		return result;
+  	} else return s;
   }
 
   /** TRUE if the property ends with '-' */

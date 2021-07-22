@@ -7,11 +7,15 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
-import paris.SubThingStore.SubPair;
+import paris.Config.LiteralDistance;
+import paris.shingling.QueryResult;
+import paris.shingling.ShinglingTable;
 
 import javatools.administrative.Announce;
 import javatools.administrative.D;
@@ -20,19 +24,16 @@ import javatools.datatypes.Triple;
 import javatools.parsers.DateParser;
 import javatools.parsers.NumberParser;
 
-import com.sleepycat.je.Environment;
-import com.sleepycat.je.EnvironmentConfig;
-import com.sleepycat.persist.EntityCursor;
-
 
 /** This class is part of the PARIS ontology matching project at INRIA Saclay/France.
  * 
  * It is licensed under a Creative Commons Attribution Non-Commercial License
- * by the author Faban M. Suchanek (http://suchanek.name). For all further information,
+ * by the author Fabian M. Suchanek (http://suchanek.name). For all further information,
  * see http://webdam.inria.fr/paris
  *
  * This class holds all information that is computed in one run of PARIS: 
  * subclass, equality, subproperty*/
+
 public class Result implements Closeable {
 
   // -----------------------------------------------------------------
@@ -46,28 +47,27 @@ public class Result implements Closeable {
   protected FactStore factStore2;
 
   /** Stores equalities. "sub" is factStore1, "super" is factStore2*/
-  protected SubThingStore equalityStore;
+  public SubThingStore equalityStore;
 
   /** Maps classes of 1 to super classes of 2*/
-  protected SubThingStore superClassesOf1;
+  public SubThingStore superClassesOf1;
 
   /** Maps classes of 2 to super classes of 1*/
-  protected SubThingStore superClassesOf2;
+  public SubThingStore superClassesOf2;
 
   /** Maps relations of 1 to super relations of 2*/
-  protected SubThingStore superRelationsOf1;
+  public SubThingStore superRelationsOf1;
 
   /** Maps relations of 2 to super relations of 1*/
-  protected SubThingStore superRelationsOf2;
-
-  /** Berkeley DB environment*/
-  protected Environment environment;
+  public SubThingStore superRelationsOf2;
 
   /** TSV File folder*/
   public final File tsvFolder;
 
   /** Berkeley File folder*/
   public final File berkeleyFolder;
+  
+  boolean allowWrite;
     
   // -----------------------------------------------------------------
   //             Constructor
@@ -76,23 +76,28 @@ public class Result implements Closeable {
   /** Constructor*/
   public Result(FactStore fs1, FactStore fs2, File folder, File tsvfolder, boolean allowWrite) {
     Announce.doing("Creating computing environment");
-    EnvironmentConfig envConfig = new EnvironmentConfig();
+    this.allowWrite = allowWrite;
+    this.berkeleyFolder = folder;
+    this.tsvFolder=tsvfolder;
+    
+    //EnvironmentConfig envConfig = new EnvironmentConfig();
     // Do some memory management: everybody gets 1/3 of 60% of the total available memory
-    envConfig.setCachePercent(20);
-    envConfig.setAllowCreate(allowWrite);
-    envConfig.setReadOnly(!allowWrite);
-    environment = new Environment(berkeleyFolder=folder, envConfig);
-    equalityStore = new SubThingStore(environment, "equality", allowWrite);
-    superClassesOf1 = new SubThingStore(environment, "superclasses1", allowWrite);
-    superClassesOf2 = new SubThingStore(environment, "superclasses2", allowWrite);
-    superRelationsOf1 = new SubThingStore(environment, "superrelations1", allowWrite);
-    superRelationsOf2 = new SubThingStore(environment, "superrelations2", allowWrite);
+    //envConfig.setCachePercent(20);
+    //envConfig.setAllowCreate(allowWrite);
+    //envConfig.setReadOnly(!allowWrite);
+    //environment = new Environment(berkeleyFolder=folder, envConfig);
+    
+    equalityStore = new MemorySubThingStore();
+    superClassesOf1 = new MemorySubThingStore();
+    superClassesOf2 = new MemorySubThingStore();
+    superRelationsOf1 = new MemorySubThingStore();
+    superRelationsOf2 = new MemorySubThingStore();
     factStore1 = fs1;
     factStore2 = fs2;
     Announce.done();
-    this.tsvFolder=tsvfolder;
     print();
   }
+    
   
   @Override
   public void close() throws IOException {
@@ -102,9 +107,9 @@ public class Result implements Closeable {
     superClassesOf2.close();
     superRelationsOf1.close();
     superRelationsOf2.close();
-    if(!Paris.test) environment.cleanLog();
-    environment.close();
-    Announce.done();    
+    /*if(!Paris.test) environment.cleanLog();
+    environment.close();*/
+    Announce.done();
   }
 
   /** Sets the TSV writers to new files*/
@@ -127,7 +132,7 @@ public class Result implements Closeable {
     if (s1 instanceof String) {
       if (s1.equals(s2)) return (1);
       if (!(s2 instanceof String)) return (0);
-      if(Config.literalDistance==Config.LiteralDistance.IDENTITY && !s1.equals(s2)) return(0);
+      //if(Config.literalDistance==Config.LiteralDistance.IDENTITY && !s1.equals(s2)) return(0);
       switch (Config.entityType(s1.toString())) {
         case NUMBER:
           if (Config.entityType(s2.toString()) == Config.EntityType.STRING) return (dateCompare(s1.toString(), s2.toString()));
@@ -226,20 +231,71 @@ public class Result implements Closeable {
     if (fs == factStore2 && !factStore1.exists(x1)) return (Collections.emptyList());
     return (Arrays.asList(x1));
   }
+  /** Return the other factStore */
+  public FactStore other(FactStore fs) {
+        if (fs == factStore1) return factStore2;
+        if (fs == factStore2) return factStore1;
+        assert(false);
+        return null;
+  }
 
   /** Says to whom you are equal as a literal that exists in the other ontology*/
   @SuppressWarnings("unchecked")
   public Collection<Pair<Object, Double>> literalEqualToScored(FactStore fs, Object x1) {
-    if (fs == factStore1 && !factStore2.exists(x1)) return (Collections.emptyList());
-    if (fs == factStore2 && !factStore1.exists(x1)) return (Collections.emptyList());
-    return(Arrays.asList(new Pair<Object,Double>(x1,1.0)));
+  	if (!Config.literalDistanceForEquality || Config.literalDistance == LiteralDistance.IDENTITY
+  			|| Config.entityType((String) x1) != Config.EntityType.STRING) {
+	    if (!other(fs).exists(x1)) return (Collections.emptyList());
+	    if (!other(fs).exists(x1)) return (Collections.emptyList());
+	    return(Arrays.asList(new Pair<Object,Double>(x1,1.0)));
+  		
+    } else {
+  		List<Pair<Object, Double>> l = new LinkedList<Pair<Object, Double>>();
+  		boolean foundExact = false;
+  		boolean shouldFindExact = false;
+  		if (other(fs).exists(x1)) shouldFindExact = true;
+  		if (other(fs).exists(x1)) shouldFindExact = true;
+  		assert (!Config.treatIdAsRelation);
+  		if (Config.literalDistance == LiteralDistance.SHINGLING || Config.literalDistance == LiteralDistance.SHINGLINGLEVENSHTEIN) {    		
+    		Iterator<QueryResult> i1 = other(fs).similarLiterals((String) x1, Config.literalDistanceThreshold).iterator();					
+				while (i1.hasNext()) {
+					QueryResult qr = i1.next();
+					double score;
+					if (Config.literalDistance == LiteralDistance.SHINGLING) {
+						score = qr.trueScore / 100.;
+					} else {
+						score = LevenshteinDistance.similarity(qr.result, (String) x1);
+					}
+					if (qr.result.equals(Config.stripQuotes((String) x1))) {
+						foundExact = true;
+					} else {
+						score /= Config.penalizeApproxMatches; // we must do it here because we don't call equality()
+					}
+					l.add(new Pair<Object, Double>('"'+qr.result+'"', score));
+				}
+  		} else {
+	  		for (FactStore.Fact fact : other(fs).facts()) {
+	  			if (fact.arg2 == 0) {
+	  				double score = equality(fs, x1, fact.arg2String);
+	  				//Announce.debug(x1, fact.arg2(), score);
+	  				if (score > 0.999999) {
+	  					foundExact = true;
+	  					assert(shouldFindExact);
+	  				}
+	  				if (score > Config.literalDistanceThreshold)
+	  					l.add(new Pair<Object, Double>(fact.arg2String, score));
+	  			}
+	  		}
+  		}
+  		assert (shouldFindExact == foundExact);
+  		return l;
+  	}
   }
-
-  /** Sets equality. s1 is in the first store, s2 is in the second store*/
-  public void setEquality(FactStore fs1, Integer s1, Integer s2, double val) {
-    if (fs1 == factStore1) equalityStore.setValue(factStore1,s1, factStore2,s2, val);
-    else equalityStore.setValue(factStore1, s2, factStore2, s1, val);
-  }
+//
+//  /** Sets equality. s1 is in the first store, s2 is in the second store*/
+//  public void setEquality(FactStore fs1, Integer s1, Integer s2, double val) {
+//    if (fs1 == factStore1) equalityStore.setValue(factStore1,s1, factStore2,s2, val);
+//    else equalityStore.setValue(factStore1, s2, factStore2, s1, val);
+//  }
 
   /** Returns equality*/
   public static double numCompare(String s1, String s2) {
@@ -260,12 +316,17 @@ public class Result implements Closeable {
 
   /** Compares two strings*/
   public static double stringCompare(String s1, String s2) {
+  	double score;
     s1=Config.stripQuotes(s1);
     s2=Config.stripQuotes(s2);    
     String splitBy="";
     switch(Config.literalDistance) {
-      case IDENTITY: return(s1.equals(s2)?1:0);
-      case NORMALIZE: return(Config.normalizeString(s1).equals(Config.normalizeString(s2))?1:0);
+      case IDENTITY:
+      	score = (s1.equals(s2)?1:0);
+      	break;
+      case NORMALIZE:
+      	score = (Config.normalizeString(s1).equals(Config.normalizeString(s2))?1:0);
+      	break;
       case BAGOFWORDS:
         splitBy="\\W";
       case BAGOFCHARS:
@@ -277,23 +338,39 @@ public class Result implements Closeable {
         Set<String> union = new TreeSet<String>(s1split);
         union.addAll(s2split);
         double val = intersection.size() / (double) union.size();
-        return (val);        
+        score = (val);
+        break;
+      case LEVENSHTEIN:
+      case SHINGLINGLEVENSHTEIN:
+      	score = LevenshteinDistance.similarity(s1, s2);
+      	break;
+//      case JARO_WINKLER:
+//        JaroWinklerDistance jwd = new JaroWinklerDistance();
+//      	double d = jwd.proximity(s1, s2);
+//      	//Announce.debug("proximity of ", s1, " and ", s2, " is ", d);
+//      	score = d;
+//      	break;
+      case SHINGLING:
+      	score = ShinglingTable.goldStandard(s1, s2, MemoryFactStore.shinglingSize)/100.;
+      	break;
+      default:
+      	assert(false);
+      	score = -1;
+      	break;
     }
-    return(0);
+    if (s1.equals(s2))
+    	assert(score > 0.999);
+    else
+    	score /= Config.penalizeApproxMatches;
+    return score;
   }
-
+  
   /** Compares two dates*/
   public static double dateCompare(String s1, String s2) {
     s1 = Config.stripQuotes(s1);
     s2 = Config.stripQuotes(s2);
     if (!DateParser.isDate(s2) && !NumberParser.isInt(s2)) return (0);
     return (DateParser.includes(s1, s2) || DateParser.includes(s2, s1) ? 1 : 0);
-  }
-
-  /** Clears the equality*/
-  public void clearEquality(FactStore fs, Integer x) {
-    if (fs == factStore1) equalityStore.clearSuperOf(x);
-    else equalityStore.clearSubOf(x);
   }
 
   // -----------------------------------------------------------------
@@ -357,24 +434,9 @@ public class Result implements Closeable {
       setSubrelation(fssub, -sub, -supr, val);
       return;
     }
+    Announce.message("Setting " + sub + " as subrel of " + supr + " with score " + val);
     if (fssub == factStore1) superRelationsOf1.setValue(factStore1,sub, factStore2,supr, val);
     else superRelationsOf2.setValue(factStore2,sub, factStore1,supr, val);
-  }
-
-  /** Removes all superclasses of a class*/
-  public void clearSuperClassesOf(FactStore fs, Integer sub) {
-    if (fs == factStore1) superClassesOf1.clearSuperOf(sub);
-    else superClassesOf2.clearSuperOf(sub);
-  }
-
-  /** Removes all superrelations of a class*/
-  public void clearSuperRelationsOf(FactStore fs, Integer sub) {
-    if(sub<0) {
-      clearSuperRelationsOf(fs, -sub);
-      return;
-    }
-    if (fs == factStore1) superRelationsOf1.clearSuperOf(sub);
-    else superRelationsOf2.clearSuperOf(sub);
   }
 
   /** Returns the equality between two classes*/
@@ -416,11 +478,11 @@ public class Result implements Closeable {
     Announce.message("   Java Free: " + Runtime.getRuntime().freeMemory() / 1000 / 1000);
     Announce.message("   Java Max: " + Runtime.getRuntime().maxMemory() / 1000 / 1000);
     Announce.message("   Java Total: " + Runtime.getRuntime().totalMemory() / 1000 / 1000);
-    Announce.message("   BDB cache percent: " + environment.getConfig().getCachePercent());
-    Announce.message("   BDB cache size: " + environment.getConfig().getCacheSize() / 1000 / 1000);
+    //Announce.message("   BDB cache percent: " + environment.getConfig().getCachePercent());
+    //Announce.message("   BDB cache size: " + environment.getConfig().getCacheSize() / 1000 / 1000);
   }
   
-  /** Saves the data. This process is orthogonal to the step-by-step-printing. Be sure to use only one ogf these. */
+  /** Saves the data. This process is orthogonal to the step-by-step-printing. Be sure to use only one of these. */
   public void saveTo(File folder) throws IOException {
     Announce.doing("Saving");
     Announce.doing("Saving equality"); 
@@ -435,41 +497,5 @@ public class Result implements Closeable {
     Announce.done();
   }
 
-  /** Removes the equalities that contain the second entity twice*/
-  public void removeDups() {
-    Announce.doing("Removing duplicates");
-    if(!Config.takeMax) {
-      Announce.message("Config tells us not to remove duplicates");
-      Announce.done();
-      return;
-    }
-    long numAssignments=equalityStore.superIndex.count();
-    Announce.message("Current number of assignments:",numAssignments);
-    Announce.progressStart("Removing duplicates", numAssignments);
-    EntityCursor<SubPair> cursor=equalityStore.superIndex.entities();
-    double maxValue=-1;
-    boolean treatedOne=false;
-    int second=Integer.MAX_VALUE;
-    for(SubPair pair : cursor) {
-      if(second==Integer.MAX_VALUE || pair.supr!=second) {
-        EntityCursor<SubPair> innercursor=equalityStore.superIndex.subIndex(pair.supr).entities();
-        maxValue=-1;
-        treatedOne=false;
-        for(SubPair innerPair : innercursor) {
-          if(innerPair.val>maxValue) maxValue=innerPair.val;
-        }
-        innercursor.close();
-      }
-      if(pair.val<maxValue || Config.takeMaxMax && pair.val==maxValue && treatedOne) {
-        cursor.delete();
-        treatedOne=true;
-      }
-      Announce.progressStep();
-    }
-    cursor.close();
-    Announce.progressDone();
-    Announce.message("Current number of assignments:",equalityStore.superIndex.count());
-    Announce.done();
-  }
 
 }

@@ -10,7 +10,7 @@ import javatools.administrative.D;
 /** This class is part of the PARIS ontology matching project at INRIA Saclay/France.
  * 
  * It is licensed under a Creative Commons Attribution Non-Commercial License
- * by the author Faban M. Suchanek (http://suchanek.name). For all further information,
+ * by the author Fabian M. Suchanek (http://suchanek.name). For all further information,
  * see http://webdam.inria.fr/paris
  *
  * This class serves to optimize the matching process. It stores which relations found counterparts in the first iteration.

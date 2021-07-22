@@ -5,6 +5,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -28,6 +29,24 @@ import javatools.filehandlers.TSVFile;
  */
 public class Evaluation {
 
+	public static class IterationResults {
+		File iteration;
+		double entitiesPrecision;
+		double entitiesRecall;
+		double relationsPrecision;
+		
+		public IterationResults(File iteration, double entitiesPrecision, double entitiesRecall, double relationsPrecision) {
+			this.iteration = iteration;
+			this.entitiesPrecision = entitiesPrecision;
+			this.entitiesRecall = entitiesRecall;
+			this.relationsPrecision = relationsPrecision;
+		}
+		
+		public void print() {
+			Announce.message(iteration, entitiesPrecision, entitiesRecall, relationsPrecision);
+		}
+	}
+	
   /** Returns: Number of entities, number of correctly assigned entities, total number of assignemnts.
    * Ties take the first assignment.*/
   public static List<Integer> evaluate(File eqvFile, GoldStandard gold) throws IOException {
@@ -88,7 +107,7 @@ public class Evaluation {
   }
 
   /** Evaluates one file*/
-  public static void handle(File file, GoldStandard gold) throws IOException {
+  public static IterationResults handle(File file, GoldStandard gold) throws IOException {
     Announce.doing("Checking", file);
     List<Integer> result = evaluate(file, gold);
     Announce.message("Number of entities matched:", result.get(2));
@@ -103,41 +122,58 @@ public class Evaluation {
     Announce.message("Relations computed from that:");
     int correct = 0;
     int wrong = 0;
+    int dunno = 0;
     for (Map.Entry<String, String> rel : relations(file).entrySet()) {
       EvalVal eval = gold.evaluateRelation(rel.getKey(), rel.getValue());
       Announce.message("   ", rel, eval);
       if (eval == EvalVal.CORRECT) correct++;
       else if (eval == EvalVal.WRONG) wrong++;
+      else dunno++;
     }
-    Announce.message("  Precision:", correct / (double) (correct + wrong));
+    Announce.message("  Correct:", correct);
+    Announce.message("  Wrong:", wrong);
+    Announce.message("  Dunno:", dunno);
+    double relPrec = correct / (double) (correct + wrong);
+    Announce.message("  Precision:", relPrec);
     Announce.message("  Recall:", correct / (double) gold.numGoldStandardRelations());
     Announce.message("  Assignments:", correct +wrong);
+    Announce.message("  Total:", correct +wrong + dunno);
     Announce.done();
+    return new IterationResults(file, prec, rec, relPrec);
   }
 
   /** Handles all result files in a given folder*/
-  public static void handleAll(File folder, GoldStandard gold) throws IOException {
+  public static List<IterationResults> handleAll(File folder, GoldStandard gold) throws IOException {
     List<File> files = Arrays.asList(folder.listFiles());
+    List<IterationResults> results = new LinkedList<IterationResults>();
     Collections.sort(files);
     for (File f : files) {
-      if(f.getName().endsWith("eqv.tsv")) handle(f, gold);
+      if(f.getName().endsWith("eqv.tsv")) {
+      	IterationResults result = handle(f, gold);
+      	results.add(result);
+      }
     }
+    return results;
   }
 
   /** Handles all files for a setting*/
-  public static void handle(Setting setting) throws IOException {
+  public static List<IterationResults> handle(Setting setting) throws IOException {
     Announce.setWriter(new FileWriter(setting.home + "/eval.txt"));
-    handleAll(setting.tsvFolder, setting.gold);
-    Announce.close();
+    return handleAll(setting.tsvFolder, setting.gold);
   }
 
   /** Runs the evaluation*/
   public static void main(String[] args) throws Exception {
-    handleAll(new File("c:/fabian/data/runVLDB/dbpedia"),Setting.yagodbpediaMoreFacts.gold);
-    //handleAll(new File("c:/fabian/data/runVLDB/imdb"), Setting.imdbyago.gold);
-    //   handle(new File("c:/fabian/data/runVLDB/imdb/4_eqv_nodup.tsv"),Setting.imdbyago.gold);
-    //handle(new File("c:/fabian/data/runVLDB/imdb/naiveMatch_eqv_nodup.tsv"),Setting.imdbyago.gold);
-    //handle(Setting.persons);
+    if(args==null || args.length != 2) Announce.help(
+    		"Evaluation <directory> <goldStandard>\n",
+    		"Evaluate the DBpedia-YAGO TSV files in <directory> according to <goldStandard> possible correct matchings\n",
+    		"See README for indications on how to compute the gold standard");
+    GoldStandard custom = new GoldStandard(new Integer(args[1]),GoldStandard.yagoDbpediaRelations);
+  	List<IterationResults> results = handleAll(new File(args[0]), custom);
+  	for (IterationResults r : results) {
+  		r.print();
+  	}
+  	Announce.close();
   }
 
 }
