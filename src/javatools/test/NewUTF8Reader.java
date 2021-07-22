@@ -165,7 +165,7 @@ public class NewUTF8Reader extends Reader {
       }
       ff.close();
       time = System.currentTimeMillis() - time;
-      System.out.println("Done in " + time);
+      System.out.println("Read "+count+" chars in " + time);
     }
   }
 }

@@ -1,6 +1,5 @@
 package paris.shingling;
 
-
 /**
  * This class is part of the PARIS ontology matching project at INRIA
  * Saclay/France.
@@ -10,19 +9,17 @@ package paris.shingling;
  * http://webdam.inria.fr/paris
  */
 
-import java.io.*;
-import java.util.*;
+import java.io.Serializable;
 
+public class QueryResult implements Serializable {
+	private static final long serialVersionUID = -418561007747745856L;
+	public String result;
+	public double estimatedScore;
+	public double trueScore;
 
-public class QueryResult implements Serializable{
-     public String result;
- public double estimatedScore;
- public double trueScore;
- 
- public QueryResult(String s, double eS, double tS){
- result=s;
- estimatedScore=eS;
- trueScore=tS;
- 
- }
+	public QueryResult(String s, double eS, double tS) {
+		result = s;
+		estimatedScore = eS;
+		trueScore = tS;
+	}
 }

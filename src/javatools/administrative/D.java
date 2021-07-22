@@ -350,7 +350,7 @@ public class D {
   }
 
   /** Compares pairs of comparable things (a1,a2,b1,b2,...), including NULL */
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings({ "unchecked", "rawtypes" })
   public static int comparePairs(Object... o) {
     for (int i = 0; i < o.length; i += 2) {
       int c = compare((Comparable) o[i], (Comparable) o[i + 1]);
@@ -409,7 +409,15 @@ public class D {
   
   /** Picks one element from a set or NULL*/
   public static <T> T pick(Collection<T> set) {
-    if(set.isEmpty()) return(null);
+    if(set==null || set.isEmpty()) return(null);
     return(set.iterator().next());
+  }
+  
+  /** Returns the size of the intersection*/
+  public static<T> int intersectionSize(Collection<T> c1, Collection<T> c2) {
+	  if(c1.size()>c2.size()) return(intersectionSize(c2,c1));
+	  int result=0;
+	  for(T t : c1) if(c2.contains(t)) result++;
+	  return(result);
   }
 }

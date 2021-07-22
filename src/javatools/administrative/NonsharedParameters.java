@@ -4,11 +4,13 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.lang.reflect.Field;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.sql.Timestamp;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
-import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -16,8 +18,6 @@ import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javatools.administrative.Announce;
-import javatools.administrative.D;
 import javatools.database.Database;
 import javatools.database.MySQLDatabase;
 import javatools.database.OracleDatabase;
@@ -36,15 +36,17 @@ import javatools.filehandlers.FileLines;
   
    This is a nonshared, i.e. instantiable variation of the Parameters class. 
    It allows to have different parameter settings handled simultaneously, 
-   i.e. each component (or each component instance) using NonsharedParameters can have
-   its own parameters allowing, for instance, that two components running at the same time
+   i.e. each component (or each component instance) using NonsharedParameters can maintain
+   its own parameters. This allows, for instance, that two components running at the same time
    work on different databases, both obtained through their own NonsharedParameters instance.  
    
    While the old 'Parameters' class is more convenient to use (less objects passed around),
    this version makes it easier to integrate your components with other components that also 
    use the Parameters/NonsharedParameters to load (and maintain) their settings.
    
-   Therefore please consider using the NonsharedParameters instead of the Parameters. 
+   Therefore please consider using the NonsharedParameters instead of the Parameters, 
+   if your code may ever be used in parallel with another project that might use one 
+   of the Parameters classes. 
   
   Provides an interface for an ini-File. The ini-File may contain parameters of the form
   <PRE>
@@ -56,7 +58,8 @@ import javatools.filehandlers.FileLines;
   are trimmed for both parameter names and values. Boolean parameters accept multiple
   ways of expressing "true" (namely "on", "true", "yes" and "active").<P>
   
-  This class does function as an object! Example:
+  This class does function as an object. 
+  Example:
   <PRE>
     // Read data from my.ini
     NonsharedParameters params = new NonsharedParameters("my.ini");
@@ -71,7 +74,7 @@ import javatools.filehandlers.FileLines;
   You can load parameters from multiple files. These will overlay.
   You can reference a .ini file in another .ini file using the 'include' parameter, 
   included files will be loaded at the point of the 'include' statements, 
-  later parameter settings (whether directly in the file or by another include)
+  parameter settings following the include statement can
   overwrite parameter settings of this included ini file.   
   Example:
    Content of main.ini:
@@ -90,7 +93,7 @@ import javatools.filehandlers.FileLines;
      databaseHost = localhost
      databasePort = 5432
    </PRE>
-   If main.ini is loaded, the port parameter will have value '5555' in the resulting NonsharedParameters instance.
+   If main.ini is loaded, the 'databasePort' parameter will have value '5555' in the resulting NonsharedParameters instance.
    Include is recursive, make sure you do not generate a cycle!
      
 */
@@ -128,6 +131,10 @@ public class NonsharedParameters implements Cloneable{
         "none"
   });
   
+  /*****************************************************************************************************************    
+   ****                                   Initiate and ShutDown                                                 ****
+   *****************************************************************************************************************/
+  
   /** Constructors*/
   public NonsharedParameters(){};
   public NonsharedParameters(File iniFile)throws IOException{    
@@ -146,8 +153,33 @@ public class NonsharedParameters implements Cloneable{
 	if(localPath!=null)
 	   	basePath=localPath.endsWith("/")?localPath:localPath+"/";
     init(iniFile);
-  };  
+  };
+  
+  public NonsharedParameters(NonsharedParameters other){
+    this.basePath=other.basePath;
+    this.iniFile=other.iniFile;    
+    for (Map.Entry<String,String> entry:other.values.entrySet())
+     values.put(entry.getKey(),entry.getValue());      
+  };
 
+  /** Cloning implementation */
+  @Override 
+  public NonsharedParameters clone(){
+    try {
+      NonsharedParameters other=(NonsharedParameters) super.clone();
+      other.values=new TreeMap<String,String>();
+      for (Map.Entry<String,String> entry:values.entrySet())
+        other.values.put(entry.getKey(),entry.getValue());            
+      return other;
+    } catch (CloneNotSupportedException e) {
+        throw new Error("Is too",e);
+    }
+  }
+  
+  
+  /*****************************************************************************************************************    
+   ****                                     Parameter Access                                                    ****
+   *****************************************************************************************************************/
   
   /** Returns a value for a date parameter;  */
   public Timestamp getTimestamp(String s) throws UndefinedParameterException {
@@ -166,14 +198,12 @@ public class NonsharedParameters implements Cloneable{
       return get(s);
     else{
       String path=get(s);
-      if(path.startsWith("./"))
-        return basePath+path.substring(2);
+      if(path.startsWith("[CONFDIR]"))
+        return basePath+path.substring(9);
 //      else if(path.startsWith("../"))
 //          return basePath+path;
-      else if(path.startsWith("/"))
-        return path;
       else 
-        return basePath+path;
+        return path;
     }
   }
 
@@ -191,6 +221,31 @@ public class NonsharedParameters implements Cloneable{
   /** Returns a value for a file or folder parameter, returning the default value if undefined; same as getPath but returns an actual File instance */
   public File getFile(String s, File defaultValue) throws UndefinedParameterException {
     return(isDefined(s)?new File(getPath(s)):defaultValue);
+  }
+  
+  /** Returns a URI built from a given parameter's value 
+   * @throws URISyntaxException */
+  public URI getURI(String s) throws UndefinedParameterException, URISyntaxException{
+    return new URI(get(s));
+  }
+  
+  /** Returns a URI built from a given parameter's value, but returns a given default value if the parameter is undefined
+   * @throws URISyntaxException */
+  public URI getURI(String s, URI defaultValue) throws UndefinedParameterException, URISyntaxException {
+    return(isDefined(s)?new URI(get(s)):defaultValue);
+  }
+    
+  /** Returns a URL built from a given parameter's value 
+   * @throws MalformedURLException */
+  public URL getURL(String s) throws UndefinedParameterException, MalformedURLException{
+    return new URL(get(s));
+  }
+  
+  /** Returns a URL built from a given parameter's value, but returns a given default value if the parameter is undefined
+   * @throws MalformedURLException 
+   * @throws URISyntaxException */
+  public URL getURL(String s, URL defaultValue) throws UndefinedParameterException, MalformedURLException {
+    return(isDefined(s)?new URL(get(s)):defaultValue);
   }
 
   /** Returns a value for an integer parameter as Integer object*/
@@ -272,9 +327,34 @@ public class NonsharedParameters implements Cloneable{
     if(!isDefined(s)) return(null);
     return(Arrays.asList(get(s).split("\\s*,\\s*")));
   }
+  
+  /** Returns a value for a map parameter */
+  public Map<String,String> getMap(String s) throws UndefinedParameterException  {
+    if(!isDefined(s)) return(null);
+    Map<String,String> map =new HashMap<String,String>();
+    for(String entry:get(s).split("\\s*,\\s*")){
+      String[] entrypair=entry.split("\\s*-->\\s*");
+      if (entrypair.length<2)
+        return null;
+      map.put(entrypair[0].toLowerCase(), entrypair[1]);
+    }      
+    return map;
+  }
+  
+  /** Returns a value for a map parameter */
+  public String getMapEntry(String s, String key) throws UndefinedParameterException  {
+    if(!isDefined(s)) return(null);       
+    for(String entry:get(s).split("\\s*,\\s*")){
+      String[] entrypair=entry.split("\\s*-->\\s*");
+      if (entrypair.length<2)
+        return null;
+      if(entrypair[0].toLowerCase().equals(key.toLowerCase()))
+        return entrypair[1];
+    }      
+    return null;
+  }
 
 
- 
   /** Returns a value for a parameter*/
   public String get(String s) throws UndefinedParameterException  {
     if(values==null) throw new RuntimeException("Call init() before get()!");
@@ -393,6 +473,8 @@ public class NonsharedParameters implements Cloneable{
     if(mainIni){
       values=new TreeMap<String,String>();    
       iniFile=f;
+      if(basePath==null)
+        basePath=(f.getParent()!=null?f.getParent()+"/":"");
     }
             
     if (!iniFile.exists()) {
@@ -400,20 +482,32 @@ public class NonsharedParameters implements Cloneable{
           iniFile.getCanonicalPath(),
           "was not found.");
     }
-    for(String l : new FileLines(f)) {
-      Matcher m=INIPATTERN.matcher(l);
-      if(!m.matches()) continue;
-      String s=m.group(2).trim();
-      if(s.startsWith("\"")) s=s.substring(1);
-      if(s.endsWith("\"")) s=s.substring(0,s.length()-1);      
+    String lastAttrib=null;
+    for (String l : new FileLines(f)) {
+      Matcher m = INIPATTERN.matcher(l);
+      if (!m.matches()) {
+        if(lastAttrib!=null) {
+          values.put(lastAttrib, values.get(lastAttrib)+l);
+          if(!l.trim().endsWith(",")) lastAttrib=null;
+        }
+        continue;
+      }       
+      String s = m.group(2).trim();
+      if (s.startsWith("\""))
+        s = s.substring(1);
+      if (s.endsWith("\""))
+        s = s.substring(0, s.length() - 1);
       if(m.group(1).toLowerCase().equals("include")){
         if(s.startsWith("/"))
           init(s,false);
         else
           init((f.getParent()!=null?f.getParent()+"/":"")+s,false);        
       }
-      else
-        values.put(m.group(1).toLowerCase(),s);        
+      else{
+        values.put(m.group(1).toLowerCase(), s);
+        if(s.trim().endsWith(",")) lastAttrib=m.group(1).toLowerCase();
+        else lastAttrib=null;
+      }
     }
   }
   
@@ -573,6 +667,7 @@ public class NonsharedParameters implements Cloneable{
         if (field.getType() == Integer.class || field.getType() == int.class) return getInteger(parameterName);
         else if (field.getType() == Boolean.class || field.getType() == boolean.class) return new Boolean(getBoolean(parameterName));
         else if (field.getType() == Float.class || field.getType() == float.class) return new Float(getFloat(parameterName));
+        else if (field.getType() == Double.class || field.getType() == double.class) return new Double(getDouble(parameterName));
         else if (D.indexOf(List.class, (Object[]) field.getType().getInterfaces()) != -1) return getList(parameterName);
         else if (D.indexOf(List.class, field.getType()) != -1) return getList(parameterName);
         else return get(parameterName);
@@ -593,19 +688,7 @@ public class NonsharedParameters implements Cloneable{
     w.close();
   }
   
-  /** Cloning implementation */
-  @Override
-  public NonsharedParameters clone(){
-    try {
-      NonsharedParameters other=(NonsharedParameters) super.clone();
-      other.values=new TreeMap<String,String>();
-      for (Map.Entry<String,String> entry:values.entrySet())
-        other.values.put(entry.getKey(),entry.getValue());            
-      return other;
-    } catch (CloneNotSupportedException e) {
-        throw new Error("Is too",e);
-    }
-  }
+
 
   
   

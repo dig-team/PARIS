@@ -156,7 +156,7 @@ public class PositionTracker {
     private SortedMap<Integer,Integer>positionChanges;
     //private SortedMap<Integer,Integer>new2OldMap;
     private PositionTracker new2OldTracker=null;
-    private int accumulatedModifier=0;
+  //  private int accumulatedModifier=0;
       
     public ForwardPositionTracker(){
       positionMap=new TreeMap<Integer,Integer>();
@@ -170,7 +170,7 @@ public class PositionTracker {
     public void addPositionChange(int pos, int modifier){
           if(modifier!=0){                                         
             positionChanges.put(pos,modifier);
-            accumulatedModifier+=modifier;
+  //          accumulatedModifier+=modifier;
             /*if(new2OldMap.containsKey(pos+accumulatedModifier))
               oldModifier=new2OldMap.get(pos+accumulatedModifier);
             new2OldMap.put(pos+accumulatedModifier, -1*modifier+oldModifier);                        
@@ -201,7 +201,7 @@ public class PositionTracker {
       }
        
       positionChanges.clear();
-      accumulatedModifier=0;
+//      accumulatedModifier=0;
       new2OldTracker.closeRun();
         
       return;

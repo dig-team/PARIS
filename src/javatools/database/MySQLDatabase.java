@@ -36,6 +36,13 @@ Example:
 </PRE>
 */
 public class MySQLDatabase extends Database {
+  
+  /** holds the user name */
+  private String user=null;
+  private String password=null;
+  private String database=null;
+  private String host=null;
+  private String port=null; 
 
   /** Constructs a new MySQLDatabase from a user and a password,
    * all other arguments may be null*/
@@ -46,23 +53,33 @@ public class MySQLDatabase extends Database {
     if (database == null) database = "";
     if(port==null) port="";
     else port=":"+port; 
-    connection = DriverManager.getConnection(
-          "jdbc:mysql://"+host+port+"/"+database+"?user="+user+"&password="+password);
-    connection.setAutoCommit( true );  
-    description="MySQL database for "+user+" at "+host+":"+port+", database "+database;
-
+    this.user=user;
+    this.password=password;
+    this.database=database;
+    this.host=host;
+    this.port=port;
+    connect();
     
 	  type2SQL.put(Types.REAL, SQLType.ansifloat);	  
 	  type2SQL.put(Types.BLOB,blob);
 	  type2SQL.put(-4,blob);
 	
 	  //java2SQL.put(String.class,blob);
-      java2SQL.put(String.class, ansivarcharbin);
-      type2SQL.put(Types.VARCHAR, ansivarcharbin);
+      java2SQL.put(String.class, mysqlvarchar);
+      type2SQL.put(Types.VARCHAR, mysqlvarchar);
 
   }
 
   public MySQLDatabase() {
+  }
+  
+  /** connects to the database specified */
+  @Override
+  public void connect () throws SQLException{
+    connection = DriverManager.getConnection(
+        "jdbc:mysql://"+host+port+"/"+database+"?user="+user+"&password="+password);
+    connection.setAutoCommit( true );  
+    description="MySQL database for "+user+" at "+host+":"+port+", database "+database;
   }
 
 @Override
@@ -75,12 +92,44 @@ public class MySQLDatabase extends Database {
     return false;
   }
   
-  public String format(Object o) {
-    String s=o.toString().replace("'", "''").replace("\\", "\\\\");
-    //if(s.length()>scale) s=s.substring(0,scale);
+/* the varchar and blob types specified below should cover the format differences 
+ * such that the general format method needs not to be overwritten (in trial phase, 
+ * if there occur any problems you can revert to revision 6614 or fix it here
+ * and best add a note what went wrong or notify me; If no problems occur I'll 
+ * completele remove the format function at some point. (Steffen))
+ *   public String format(Object o) {
     
-    return("'"+s+"'");
+    //String s=o.toString();
+    //s=s.replace("'", "''").replace("\\", "\\\\");
+    //if(s.length()>scale) s=s.substring(0,scale);
+    //return("'"+s+"'");
+      
+    String s=super.format(o);
+    return s;
+
   } 
+*/
+  
+  public static class MysqlVarchar extends SQLType.ANSIvarchar {
+    public MysqlVarchar(int size) {
+      super(size);
+    }  
+    public MysqlVarchar() {
+      this(255);
+    }        
+    public String format(Object o) {
+      String s=o.toString().replace("\\", "\\\\").replace("'", "''");
+      if(s.length()>scale){
+        s=s.substring(0,scale);
+        if(s.endsWith("'"))
+          if(!s.endsWith("''"))
+            s=s.substring(0, s.length()-1);
+      }
+      
+      return("'"+s+"'");
+    }
+  }
+public static MysqlVarchar mysqlvarchar=new MysqlVarchar(); 
   
 	public static class Blob extends SQLType.ANSIblob {
 	    public Blob(int size) {
@@ -93,13 +142,17 @@ public class MySQLDatabase extends Database {
 	      return("BLOB");
 	    }
 	    public String format(Object o) {
-	      String s=o.toString().replace("'", "\'").replace("\\", "\\\\");	      
+	      String s=o.toString().replace("\\", "\\\\").replace("'", "\\'");	      
 	      return("'"+s+"'");
 	    } 
 	  }
 	public static Blob blob=new Blob();	
   
-  // a VARCHAR BINARY TYPE, making sure we are caseSensitive in varchar fields (this can probably be avoided by choosing a case-sensitive collation (not sure))
+  /** a VARCHAR BINARY type, making sure we are case-sensitive in varchar fields 
+	 *  (currently we assume case-sensitive collation is used, so using this is not necessary,
+	 *   if this is not given however, case-sensitive applications can use this sqltype instead
+	 *   of the normal varchar type)
+	 *  */
   public static class ANSIvarcharBin extends SQLType {
     public ANSIvarcharBin(int size) {
       typeCode=Types.VARCHAR;
@@ -109,9 +162,9 @@ public class MySQLDatabase extends Database {
       this(255);
     }        
     public String format(Object o) {
-      String s=o.toString().replace("'", "\\'");
+      String s=o.toString().replace("'", "\\'");//.replace("\\", "\\\\");
       if(s.length()>scale) s=s.substring(0,scale);
-      return("'"+s+"'");
+      return("BINARY '"+s+"'");
     }
     public String toString() {
       return("VARCHAR("+scale+") BINARY");      
@@ -168,8 +221,8 @@ public class MySQLDatabase extends Database {
   //           DB specific SQL variations of common functionality
   // ---------------------------------------------------------------------
   
-  /** returns the database system specific expression for isnull functionality 
-   * i.e. isnull(a,b) returns b if a is null and a otherwise */
+  /** returns the database system specific expression for ifnull functionality 
+   * i.e. ifnull(a,b) returns b if a is null and a otherwise */
   @Override
   public String getSQLStmntIFNULL(String a, String b){
 	  return "IFNULL("+a+","+b+")";

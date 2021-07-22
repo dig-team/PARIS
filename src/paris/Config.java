@@ -5,6 +5,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javatools.administrative.Announce;
+import javatools.administrative.D;
 import javatools.datatypes.FinalMap;
 import javatools.parsers.DateParser;
 import javatools.parsers.NumberParser;
@@ -18,7 +19,8 @@ import javatools.parsers.NumberParser;
  * This class contains the design choices for PARIS. 
  * PARIS is parameter-free in the sense that one setting should do a decent job on all
  * ontologies. If it does not, consider fiddling with these parameters. See our 
- * paper for more details. */
+ * technical report for more details. */
+
 
 public class Config {
 
@@ -30,46 +32,15 @@ public class Config {
    * y:Berlin---hasLabel-->"Berlin")
    * Default is FALSE.*/
   public static boolean treatIdAsRelation = false;
-
-  /** Normalize strings to lowercase letters and numbers when loading RDF/N3 triples into the FactStore. 
-   * Switch this on BEFORE YOU GENERATE THE ONTOLOGIES, if the ontologies that you want to match contain names and
-   * strings in slight variations (Berlin=berlin). Default is FALSE.*/
-  public static boolean normalizeStrings = false;
-
-  /** Normalize dates to the years. . 
-   * Switch this on BEFORE YOU GENERATE THE ONTOLOGIES, if the ontologies that you want to match contain dates on one side
-   * and years on the other side. Default is FALSE.*/
-  public static boolean normalizeDatesToYears = false;
-
-  /** Types of string distance used in Computed.compareStrings()*/
-  public static enum LiteralDistance {
-    IDENTITY, BAGOFCHARS, NORMALIZE, BAGOFWORDS, LEVENSHTEIN, SHINGLING, SHINGLINGLEVENSHTEIN
-  };
-
-  /** String distance used in Computed.compareStrings() for negative evidence.
-   * Has an effect only if punish=TRUE. 
-   * There is not much use tinkering with this value, leave it at the default value of IDENTITY.
-   * If you need a string distance, use normalizeStrings=TRUE.*/
-  /* if you use SHINGLING or SHINGLINGLEVENSHTEIN, make sure that the fact stores were generated with the literal indexes */
-  public static LiteralDistance literalDistance = LiteralDistance.IDENTITY;
-  
-  /** divide approx matches by this value */
-  public static double penalizeApproxMatches = 2.;
   
   /** Use literalDistance for equality (and not just for punishment). Slows things down. */
   public static final boolean literalDistanceForEquality = true;
   
   /** Threshold on distance between literals to take them into account as a possible match */
- public static final double literalDistanceThreshold = 0.5;
+  public static final double literalDistanceThreshold = 0.5;
 
   /** Anything below this threshold is ignored. Value does not have much influence. Default is at 0.1.*/
   public static final double THETA = 0.1;
-
-  /** Take only the maximum assignment. This greatly speeds up the process at virtually no cost. Default is TRUE.*/
-  public static final boolean takeMax = true;
-
-  /** Take only one of the maximal assignments. This speeds up the process even more at no cost. Default is TRUE.*/
-  public static final boolean takeMaxMax = true;
 
   /** Take both sub- and super relations into account for computing the equality. 
    * This is a bit slower, but the right way to do it. Default is TRUE.*/
@@ -78,42 +49,63 @@ public class Config {
   /** Initial small value for all relations. This value does not have much effect, but should be greater-equal than THETA.
    * Default is THETA.*/
   public static double IOTA = Config.THETA;
-
-  /** Set this to TRUE to take into account negative evidence (counter evidence) for an equality assignment.
-   * This slows down the process, costs a lot in terms of recall, but can increase precision. Consider
-   * combining with different string distances or string normalization. Default is FALSE.*/
-  public static boolean punish = false;
-
-  /** If switched on, see all literal relations as weakly equivalent at value IOTA. The system will not work if you set this to FALSE. */
-  public static boolean initialSmallEquivalence = true;
   
-  /** Compress namespaces using prefixes. Might slow things down, so you might want to do it separately */
-  public static boolean performCompression = true;
-  
-  /** Initial size for large HashMap's and HashSet's */
-  public static int initialSize = 1024*1024;
+  /** Make initial small value depend on the length of relations (hacky) */
+  public static int iotaDependenceOnLength = 20;
 
+	/** should we compute class alignments? */
+	public static boolean doComputeClasses = true;
+  
+// enabling this parameter is not supported anymore
+//  /** Set this to TRUE to take into account negative evidence (counter evidence) for an equality assignment.
+//   * This slows down the process, costs a lot in terms of recall, but can increase precision. Consider
+//   * combining with different string distances or string normalization. Default is FALSE.*/
+//  public static boolean punish = false;
+
+// disabling this parameter is not supported anymore
+//  /** If switched on, see all literal relations as weakly equivalent at value IOTA. The system will not work if you set this to FALSE. */
+//  public static boolean initialSmallEquivalence = true;
+  
+  /** Use suffixes to infer the type; can be useful */
+  public static final boolean useSuffixes = false;
+  
+  /** Break ties between perfect matches and multiple perfect matches */
+  public static double epsilon = 1.01;
+  
+  /** Ignore classes when aligning entities (only use them for the class alignment) */
+  public static boolean ignoreClasses = true;
+  
+  /** Use the real normalizer, not the wrong version of PARIS 0.1 */
+  public static boolean realNormalizer = true;
+  
+  /** Use the inverse functionality as well as the functionality */
+  public static boolean bothWayFunctionalities = false;
+    
+  /** explore all length one relations after the sampling phase no matter their score during the sampling phase */
+  public static boolean allLengthOneAfterSample = true;
+  
   /** Standard namespace prefixes, add your prefixes here to simplify your life.*/
   public static Map<String, String> prefixes = new FinalMap<String, String>(
-  		"http://www.w3.org/1999/02/22-rdf-syntax-ns#", "rdf:",
-  		"http://www.w3.org/2000/01/rdf-schema#", "rdfs:",
-  		"http://www.w3.org/2001/XMLSchema#", "xsd:",
-  		"http://www.w3.org/2002/07/owl#", "owl:",
-  		"http://purl.org/dc/terms/", "dc:",
-  		"http://xmlns.com/foaf/0.1/", "foaf:",
-  		"http://www.w3.org/2006/vcard/ns#", "vcard:",
-  		"http://dbpedia.org/", "dbp:",
-  		"http://www.mpii.de/yago/resource/", "y:",
-  		"http://www.geonames.org/ontology#", "geo:"
+  		"<http://www.w3.org/1999/02/22-rdf-syntax-ns#", "rdf:",
+  		"<http://www.w3.org/2000/01/rdf-schema#", "rdfs:",
+  		"<http://www.w3.org/2001/XMLSchema#", "xsd:",
+  		"<http://www.w3.org/2002/07/owl#", "owl:",
+  		"<http://purl.org/dc/terms/", "dc:",
+  		"<http://xmlns.com/foaf/0.1/", "foaf:",
+  		"<http://www.w3.org/2006/vcard/ns#", "vcard:",
+  		"<http://dbpedia.org/", "dbp:",
+  		"<http://www.mpii.de/yago/resource/", "y:",
+  		"<http://www.geonames.org/ontology#", "geo:",
+  		"<http://bnb.data.bl.uk/id/", "bnb:"
   	);
   
   public static String join(String[] items, String separator) {
     StringBuilder builder = new StringBuilder();
     boolean first = true;
     for (String item : items) {
-    	if (!first)
-    		builder.append(separator);
-    	first = false;
+       if (!first)
+               builder.append(separator);
+       first = false;
       builder.append(item);
     }
     return builder.toString();
@@ -130,41 +122,6 @@ public class Config {
   /** Types of entities with their formatters */
   public enum EntityType {
     NUMBER, DATE, STRING, RESOURCE
-  }
-
-  /** Formats an entity. This should be a method of EntityType, but then the type is not persistent */
-  public static String format(String s, EntityType t) {
-    switch(t) {
-      case NUMBER:
-        s = NumberParser.normalize(s);
-        Double d = NumberParser.getDouble(s);
-        if(d==null) return(null);
-        if(d.intValue()==d.doubleValue()) return(""+d.intValue()); 
-        return d.toString();
-      case DATE:
-        s = DateParser.normalize(s);
-        String[] da = DateParser.getDate(s);
-        if (da == null) return (null);
-        if (normalizeDatesToYears) return (da[0]);
-        return (DateParser.newDate(da[0], da[1], da[2]));
-      case STRING:
-      s = stripQuotes(s);
-        if (normalizeStrings) s = normalizeString(s);
-        return ('"' + s + '"');
-      case RESOURCE:
-        // If we normalize, also normalize the resources, 
-        // in order to make treatIdAsRelation work
-        if (normalizeStrings && treatIdAsRelation) {
-          String pref=prefix(s);
-          String name=normalizeString(entityName(s));
-          s=pref+name;
-        }
-        if (performCompression)
-          return compress(s);
-        else
-        	return s;
-    }
-    return(null);
   }
   
   /** Returns the entity name without prefix */
@@ -207,7 +164,10 @@ public class Config {
   }
   
   /** Guesses the type of literal*/
-  public static EntityType literalType(String e) {
+  @SuppressWarnings("unused")
+	public static EntityType literalType(String e, String suffix) {
+    if (useSuffixes && suffix.equals("^^<http://www.w3.org/2001/XMLSchema#gYear>"))
+    	return EntityType.DATE;
     e=stripQuotes(e);
     if (e.length() > 0 && (e.charAt(0) == '+' || e.charAt(0) == '-' || Character.isDigit(e.charAt(0)))) {
       if (DateParser.isDate(e)) return (EntityType.DATE);
@@ -241,15 +201,8 @@ public class Config {
   public static void print() {
     Announce.message("Config:");
     Announce.message("  Ids: " + (treatIdAsRelation ? "treated as relation" : "not treated as relation"));
-    Announce.message("  Literal relations: " + (initialSmallEquivalence ? "have a small initial equivalence" : "have initial equivalence of 0"));
     Announce.message("  Theta: " + Config.THETA);
     Announce.message("  Iota: " + Config.IOTA);
-    Announce.message("  Literal distance: " + Config.literalDistance);
-    Announce.message("  Normalize strings: " + Config.normalizeStrings);
-    Announce.message("  Normalize dates to years: " + Config.normalizeDatesToYears);    
-    Announce.message("  Punishment: " + Config.punish);
-    Announce.message("  Take only max: " + Config.takeMax);
-    Announce.message("  Take only one max: " + Config.takeMaxMax);
     Announce.message("  Super- and subrelations: " + Config.subAndSuper);
   }
 
@@ -260,7 +213,12 @@ public class Config {
   		//System.out.printf("matches %s %s for %s\n", matcher.group(1), prefixes.get(matcher.group(1)), s);
   		String result = (prefixes.get(matcher.group(1)) + s.substring(matcher.group(1).length()));
   		//System.out.printf(result);
-  		return result;
+  		if (result.endsWith(">")) {
+  			return result.substring(0, result.length()-1);
+  		} else {
+  			assert(result.endsWith("-"));
+  			return result.substring(0, result.length()-2) + "-";
+  		}
   	} else return s;
   }
 
@@ -274,8 +232,9 @@ public class Config {
     if (isInverse(n)) return (n.substring(0, n.length() - 1));
     else return (n + '-');
   }
-
-  /** Test */
+  
+  
   public static void main(String[] args) {
+  	D.p(compress("<http://foo>"));
   }
 }

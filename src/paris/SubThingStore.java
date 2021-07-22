@@ -1,18 +1,21 @@
 package paris;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Collection;
+import java.io.Writer;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
-import javatools.datatypes.Pair;
-import javatools.datatypes.PeekIterator;
+import paris.storage.FactStore;
+
+import javatools.administrative.Announce;
 import javatools.datatypes.Triple;
 
 
 /** This class is part of the PARIS ontology matching project at INRIA Saclay/France.
- * 
+ *
  * It is licensed under a Creative Commons Attribution Non-Commercial License
  * by the author Fabian M. Suchanek (http://suchanek.name). For all further information,
  * see http://webdam.inria.fr/paris
@@ -20,99 +23,141 @@ import javatools.datatypes.Triple;
  * This class stores an alignment between relations or instances.
  * */
 
-public abstract class SubThingStore {
 
 
-  /** Represents a pair of a sub-entity and a super-entity with a degree*/
-  public static class SubPair {
+public abstract class SubThingStore<T> {
+
+  /** Represents a pair of a sub-entity and a super-entity with a score */
+  public static class SubPair<T> implements Comparable<SubPair<T>> {
 
     long id;
 
-    /** Holds the first entity*/
-    public int sub;
+    /** Holds the first object*/
+    public T sub;
 
-    /** Holds the second entity*/
-    public int supr;
+    /** Holds the second object*/
+    public T supr;
 
     /** Holds the score*/
     public double val;
 
     /** Constructs a pair*/
-    public SubPair() {
-
-    }
-
-    /** Constructs a pair*/
-    public SubPair(int s1, int s2, double val2) {
+    public SubPair(T s1, T s2, double val2) {
       sub = s1;
       supr = s2;
       val = val2;
     }
 
     /** Returns this as a triple*/
-    public Triple<Integer, Integer, Double> toTriple() {
-      return (new Triple<Integer, Integer, Double>(sub, supr, val));
+    public Triple<T, T, Double> toTriple() {
+      return (new Triple<T, T, Double>(sub, supr, val));
     }
 
     @Override
     public String toString() {
       return sub + "/" + supr + "/" + val + "/" + id;
     }
+
+		@Override
+		public int compareTo(SubPair<T> arg0) {
+			double v = this.val - arg0.val;
+			return (v == 0. ? 0 : (v > 0. ? 1 : -1));
+		}
     
-    public String toTsv(FactStore subStore, FactStore superStore) {
-    	return subStore.toString(sub)+"\t"+superStore.toString(supr)+"\t"+val+"\n";
+    
+  }
+
+  /** The log writer */
+  protected Writer tsvWriter;
+  
+  protected FactStore fs1;
+  protected FactStore fs2;  
+  
+  public SubThingStore(FactStore fs1, FactStore fs2) {
+  	this.fs1 = fs1;
+  	this.fs2 = fs2;
+  }
+  
+	/** Returns the probability that s1 is a sub-thing of s2*/
+	public abstract double getValue(T sub, T supr);
+  
+	/** Low-level set */
+	protected abstract void set(T sub, T supr, double val);
+	
+	/** Returns all sub-super-pairs */
+	public abstract Iterable<SubPair<T>> all();
+  
+	/** Shut down*/
+  public void close() {
+    // store.close();
+    if (tsvWriter != null) try {
+      tsvWriter.close();
+    } catch (IOException e) {
+    }
+  }
+  
+  /** Sets the writer
+	 * @throws IOException */
+  public void setTSVfile(File file) throws IOException {
+    if (tsvWriter != null) try {
+      tsvWriter.close();
+    } catch (IOException e) {
+    }
+    tsvWriter = new FileWriter(file);
+  }
+  
+  public abstract String toTsv(SubPair<T> p);
+  	
+	/** Sets the probability that s1 is a sub-thing of s2*/
+	public void setValue(T sub, T supr, double val) {
+		assert(val >= 0 && val <= 1);
+  	if (val < Config.THETA) return;
+  	set(sub, supr, val);
+    if (tsvWriter != null) try {
+    	SubPair<T> p = new SubPair<T>(sub, supr, val);
+      tsvWriter.write(toTsv(p));
+    } catch (IOException e1) {
+      Announce.warning("TSV Writer failed", e1.getMessage());
+      tsvWriter = null;
     }
   }
 
-	/** Shut down*/
-	public abstract void close();
+  public void setValueMax(T sub, T supr, double val) {
+  	double oldVal = getValue(sub, supr);
+  	if (val > oldVal)
+  		setValue(sub, supr, val);
+  }	
+	
+	/** Dump to a file */
+	public void dump(File file) throws IOException {
+    if (tsvWriter != null) try {
+      tsvWriter.close();
+    } catch (IOException e) {
+    }
+    Announce.doing("Saving TSV");
+    BufferedWriter w = new BufferedWriter(new FileWriter(file));
 
-	/** Sets the writer
-	 * @throws IOException */
-	public abstract void setTSVfile(File file) throws IOException;
-
-	/** Closes the TSV writer, dumps the whole set to file */
-	public abstract void dump(File file, FactStore subStore, FactStore superStore)
-			throws IOException;
-
-	/** Returns the probability that s1 is a sub-entity of s2*/
-	public abstract double getValue(Integer sub, Integer supr);
-
-	/** Sets the probability that s1 is a subclass of s2*/
-	public abstract void setValue(FactStore substore, Integer sub,
-			FactStore superstore, Integer supr, double val);
-
-	/** Returns superclasses*/
-	public abstract Set<Integer> superOf(Integer sub);
-
-	/** Returns superclasses, scored*/
-	public abstract Collection<Pair<Object, Double>> superOfScored(Integer sub);
-
-	/** Returns subclasses*/
-	public abstract Set<Integer> subOf(Integer supr);
-
-	/** Returns subclasses with score*/
-	public abstract Collection<Pair<Object, Double>> subOfScored(Integer supr);
-
-	/** Prints information*/
-	public abstract String toString();
-
-	/** Returns number of entries*/
-	public abstract long size();
-
-	/** Returns all sub's */
-	public abstract Iterable<Integer> subs();
-
-	/** Returns all sub-super-pairs */
-	public abstract Iterable<SubPair> all();
-
-	/** Save the contents to a file*/
-	public abstract void saveTo(File file, FactStore subStore,
-			FactStore superStore) throws IOException;
+    for (SubPair<T> pair : all()) {
+    	if (pair.val > 0) {
+        w.write(toTsv(pair));    			
+    	}
+    }
+    w.close();
+    Announce.done();
+  }
 
 	/** Returns 10 sample pairs*/
-	public abstract List<Triple<Integer, Integer, Double>> sample();
-		
-	public abstract PeekIterator<SubPair> getSuperEntities(int supr);
+	public List<Triple<T, T, Double>> sample() {
+		ArrayList<Triple<T, T, Double>> result = new ArrayList<Triple<T, T, Double>>();
+		Iterable<SubPair<T>> pairs = all();
+		int limit = 10;
+		for (SubPair<T> pair : pairs) {
+			result.add(pair.toTriple());
+			limit--;
+			if (limit <= 0)
+				break;
+		}
+		return result;
+	}
 
 }

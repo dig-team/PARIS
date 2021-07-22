@@ -298,16 +298,24 @@ public class Parameters {
 					iniFile.getCanonicalPath(),
 					"was not found.");
 		}
+		String lastAttrib=null;
 		for (String l : new FileLines(iniFile)) {
 			Matcher m = INIPATTERN.matcher(l);
-			if (!m.matches())
-				continue;
+			if (!m.matches()) {
+			  if(lastAttrib!=null) {
+				  values.put(lastAttrib, values.get(lastAttrib)+l);
+				  if(!l.trim().endsWith(",")) lastAttrib=null;
+			  }
+			  continue;
+			}				
 			String s = m.group(2).trim();
 			if (s.startsWith("\""))
 				s = s.substring(1);
 			if (s.endsWith("\""))
 				s = s.substring(0, s.length() - 1);
 			values.put(m.group(1).toLowerCase(), s);
+			if(s.trim().endsWith(",")) lastAttrib=m.group(1).toLowerCase();
+			else lastAttrib=null;
 		}
 	}
 

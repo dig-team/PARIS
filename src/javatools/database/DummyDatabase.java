@@ -782,13 +782,6 @@ public class DummyDatabase extends Database {
 		}
 
 		@Override
-		public InputStream getUnicodeStream(int columnIndex)
-				throws SQLException {
-
-			return null;
-		}
-
-		@Override
 		public InputStream getUnicodeStream(String columnLabel)
 				throws SQLException {
 
@@ -1394,6 +1387,22 @@ public class DummyDatabase extends Database {
 			return null;
 		}
 
+		public <T> T getObject(int arg0, Class<T> arg1) throws SQLException {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		public <T> T getObject(String arg0, Class<T> arg1) throws SQLException {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+    @Override
+    public InputStream getUnicodeStream(int columnIndex) throws SQLException {
+      // TODO Auto-generated method stub
+      return null;
+    }
+
 	}
 	
 	public static void main(String[] args) {
@@ -1403,4 +1412,10 @@ public class DummyDatabase extends Database {
 				);
 		d.runInterface();
 	}
+
+  @Override
+  public void connect() throws SQLException {
+    // TODO Auto-generated method stub
+    
+  }
 }

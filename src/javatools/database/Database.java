@@ -11,6 +11,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.sql.SQLFeatureNotSupportedException;
 import java.sql.Statement;
 import java.sql.Types;
 import java.util.ArrayList;
@@ -21,6 +22,7 @@ import java.util.Map;
 
 import javatools.administrative.Announce;
 import javatools.administrative.D;
+import javatools.datatypes.StringModifier;
 import javatools.filehandlers.CSVFile;
 import javatools.filehandlers.CSVLines;
 import javatools.filehandlers.UTF8Writer;
@@ -94,9 +96,50 @@ the YAGO-NAGA team (see http://mpii.de/yago-naga).
 
  */
 public abstract class Database {
+  
+
+  /*****************************************************************************************************************    
+   ****                                    Attributes                                                           ****
+   *****************************************************************************************************************/
+  
+  // ---------------------------------------------------------------------
+  //           Configuration
+  // ---------------------------------------------------------------------
+  
+  /** indicates whether automatic reconnection and requerying is attempted 
+   *  when a broken connection is discovered after an informative (SELECT) query
+   *  if this is set to false, a ConnectionBrokenSQLException is thrown instead */
+  boolean autoReconnectOnSelect=true;
+  
+  
+  /** indicates whether automatic reconnection and requerying is attempted 
+   *  when a broken connection is discovered after an update (INSERT, UPDATE) query
+   *  if this is set to false, a ConnectionBrokenSQLException is thrown instead 
+   *  @Note: In rare cases this may lead to an update query being executed twice,
+   *  so treat with care! */  
+  boolean autoReconnectOnUpdate=false;
+  
+  
+
+  /** number of milliseconds a connection validity check may 
+   *  take until we decide the server won't answer 
+   *  Note: If I'm not mistaken, typical latency over an averagely good internet connection (same continent) 
+   *  has a latency of around ~100 ms, that's why the limit is set to 150, 
+   *  feel free to adapt if this seems problematic/too large
+   *  Note: only has any effect iff autoReconnectOnX is true 
+   *  Note: Only works for databases where the driver supports isValid checks
+   *  otherwise we will simply issue a dummy query and see whether we get an answer */
+  int validityCheckTimeout=150;
+  
+  
+  // ---------------------------------------------------------------------
+  //           Internals
+  // ---------------------------------------------------------------------
 
   /** Handle for the database */
   protected Connection connection;
+  
+  /** 
 
   /** Describes this database */
   protected String description = "Unconnected default database";
@@ -130,7 +173,7 @@ public abstract class Database {
   private boolean closed = false;
 
   /** The mapping from Java to SQL */
-  public Map<Class, SQLType> java2SQL = new HashMap<Class, SQLType>();
+  public Map<Class<?>, SQLType> java2SQL = new HashMap<Class<?>, SQLType>();
   {
     java2SQL.put(Boolean.class, SQLType.ansiboolean);
     java2SQL.put(boolean.class, SQLType.ansiboolean);
@@ -162,10 +205,168 @@ public abstract class Database {
     type2SQL.put(Types.REAL, SQLType.ansifloat);
     type2SQL.put(Types.FLOAT, SQLType.ansifloat);
     type2SQL.put(Types.BOOLEAN, SQLType.ansiboolean);
+    type2SQL.put(Types.BIT, SQLType.ansiboolean);
     type2SQL.put(Types.CHAR, SQLType.ansichar);
     type2SQL.put(Types.BIGINT, SQLType.ansibigint);
-    type2SQL.put(Types.NUMERIC, SQLType.ansifloat);
+    type2SQL.put(Types.NUMERIC, SQLType.ansifloat);    
   };
+
+  
+  /*****************************************************************************************************************    
+   ****                                   Initiate and ShutDown                                                 ****
+   *****************************************************************************************************************/
+  
+  
+  /** (re-)connects to the database specified */
+  public void reconnect ()throws SQLException{
+    close(connection);
+    connect();
+  }
+  
+  /** connects to the database specified */
+  public abstract void connect ()throws SQLException;
+  
+  
+
+  /** Closes a connection */
+  public static void close(Connection connection) {
+    try {
+      if ((connection != null) && !connection.isClosed()) connection.close();
+    } catch (SQLException e) {
+    }
+  }
+
+  /** Closes a statement */
+  public static void close(Statement statement) {
+    try {
+      if (statement != null) statement.close();
+    } catch (SQLException e) {    
+      //Announce.error(e); //hook here for debugging
+    }
+  }
+
+  /** Closes a result set */
+  public static void close(ResultSet rs) {
+    
+    try{
+      if(rs.isClosed())
+        return;
+    } catch (SQLException e) {
+      //Announce.error(e); //hook here for debugging
+    }
+    try {
+      close(rs.getStatement());
+    } catch (SQLException e) {
+      //Announce.error(e); //hook here for debugging
+    }
+    try {
+      if (rs != null) rs.close();
+    } catch (SQLException e) {
+      //Announce.error(e); //hook here for debugging
+    }
+  }
+
+  /** Closes the connection */
+  public void close() {
+    if (closed) // we need to make sure we only close it once (either manually or by finalizer)
+    return;
+    if (inTransactionMode) {
+      try {
+        commitTransaction();
+      } catch (TransactionSQLException ex) {
+        Announce.error(ex);
+      }
+    }
+    while (inserters.size() != 0)
+      inserters.get(0).close();
+    close(connection);
+    try {
+      DriverManager.deregisterDriver(driver);
+    } catch (SQLException ex) {
+      Announce.error(ex);
+    }
+    closed = true;
+  }
+
+  /** Closes the connection */
+  public void finalize() {
+    try {
+      close();
+    } catch (Exception e) {
+      Announce.error(e);
+    }
+    ;
+  }
+  
+  
+  
+  /*****************************************************************************************************************    
+   ****                                         Configuration                                                   ****
+   *****************************************************************************************************************/
+
+  /** TRUE if the required JAR is there*/
+  public boolean jarAvailable() {
+    return (true);
+  }
+
+  
+  
+  /** indicates whether automatic reconnection and requerying is attempted 
+   *  when a broken connection is discovered after an informative (SELECT) query
+   *  if this is set to false, a ConnectionBrokenSQLException is thrown instead */
+  public boolean isAutoReconnectingOnSelect() {
+    return autoReconnectOnSelect;
+  }
+
+
+  /** enable/disable automatic reconnection and requerying  
+   *  when a broken connection is discovered after an informative (SELECT) query
+   *  if this is set to false, a ConnectionBrokenSQLException is thrown instead */
+  public void setAutoReconnectOnSelect(boolean autoReconnectOnSelect) {
+    this.autoReconnectOnSelect = autoReconnectOnSelect;
+  }
+
+  /** indicates whether automatic reconnection and requerying is attempted 
+   *  when a broken connection is discovered after an update (INSERT, UPDATE) query
+   *  if this is set to false, a ConnectionBrokenSQLException is thrown instead 
+   *  @Note: In rare cases this may lead to an update query being executed twice,
+   *  so treat with care! */
+  public boolean isAutoReconnectingOnUpdate() {
+    return autoReconnectOnUpdate;
+  }
+
+
+  /** enables/disables whether automatic reconnection and requerying is attempted 
+   *  when a broken connection is discovered after an update (INSERT, UPDATE) query
+   *  if this is set to false, a ConnectionBrokenSQLException is thrown instead 
+   *  @Note: In rare cases this may lead to an update query being executed twice,
+   *  so treat with care! */
+  public void setAutoReconnectOnUpdate(boolean autoReconnectOnUpdate) {
+    this.autoReconnectOnUpdate = autoReconnectOnUpdate;
+  }
+
+  /** time in miliseconds after which a connection is considered broken 
+   *  when no answer is received within that time frame
+   */
+  public int getValidityCheckTimeout() {
+    return validityCheckTimeout;
+  }
+
+  /** sets the amount of time a database has to answer to a connection probing 
+   *  before the connection is considered broken 
+   *  @Note: the value cannot be smaller than 0 */
+  public void setValidityCheckTimeout(int validityCheckTimeout) {
+    if(validityCheckTimeout<0)
+      validityCheckTimeout=0;
+    this.validityCheckTimeout = validityCheckTimeout;
+  }
+  
+
+  
+  /*****************************************************************************************************************    
+   ****                                      Query Execution                                                    ****
+   *****************************************************************************************************************/
+  
 
   /**
    * Prepares the query internally for a call (e.g. adds a semicolon). This
@@ -194,12 +395,70 @@ public abstract class Database {
   public void setResultSetType(int resultSetType) {
     this.resultSetType = resultSetType;
   }
-
-  /** TRUE if the required JAR is there*/
-  public boolean jarAvailable() {
-    return (true);
+  
+  /** Checks whether the connection to the database is still alive */
+  public boolean connected()  {
+    try{
+      return (!connection.isClosed())&&connection.isValid(validityCheckTimeout);
+    } catch (SQLFeatureNotSupportedException nosupport){
+      try{ //This should work for: H2, MySQL, MS SQL Server, PostgreSQL, SQLite; Oracle is treated differently, see OracleDatabase
+        ResultSet rs=executeQuery("SELECT 1",resultSetType,resultSetConcurrency,null); 
+        close(rs);
+        return true;
+      }catch (SQLException ex){
+        return false;
+      }
+    } catch (SQLException ex){
+      //return false;
+      throw new RuntimeException("This is very unexpected and actually should never happen.", ex);
+    }    
   }
 
+  /** called when query execution failed due to some exception; 
+   *  checks connectivity and if connection is broken may attempt to reconnect 
+   *  depending on the given parameters,
+   *  if the connection is still alive, reconnection fails or 
+   *  autoReconnect is not enabled throws a fitting exception */
+  protected void attemptReconnect(SQLException cause, boolean autoReconnect)
+  throws SQLException{
+    boolean connected=connected();
+    /* if execution fails, the connection might be broken or there is an actual problem
+     * if connection is broken and reconnecting enabled, we try to reconnect, otherwise:
+     * if connection is alive, we throw the actual error else a ConnectionIsBrokenSQLException */
+    if(connected)
+      throw cause;
+    else{ 
+      if(autoReconnect){        
+        try{
+          reconnect();
+        } catch (SQLException ex2) {          
+          throw new ConnectionBrokenSQLException("Connection is broken. Reconnection attempt failed.\n" +
+                                                 "Original exception at first try was:\n "+cause,ex2);        
+        }
+      }
+      else{
+        throw new ConnectionBrokenSQLException("Connection is broken, " +
+            "did not try to reconnect and re-execute query.", cause);
+      }
+    }   
+  }
+
+  /**
+   * Returns the results for a query as a ResultSet with given type, concurrency and
+   * fetchsize. Does not check whether query is an update or select query!
+   * The preferred way to execute a query is by the query(String,
+   * ResultIterator) method, because it ensures that the statement is closed
+   * afterwards.
+   * External code should always call one of the 'query' or the 'executeUpdate'
+   * methods.
+   */
+  protected ResultSet executeQuery(String sql, int resultSetType, int resultSetConcurrency, Integer fetchsize) 
+  throws SQLException {
+    Statement stmnt = connection.createStatement(resultSetType, resultSetConcurrency);
+    if (fetchsize != null) stmnt.setFetchSize(fetchsize);
+    return (stmnt.executeQuery(sql));    
+  }
+  
   /**
    * Returns the results for a query as a ResultSet with given type, concurrency and
    * fetchsize. The preferred way to execute a query is by the query(String,
@@ -211,17 +470,17 @@ public abstract class Database {
    */
   public ResultSet query(CharSequence sqlcs, int resultSetType, int resultSetConcurrency, Integer fetchsize) throws SQLException {
     String sql = prepareQuery(sqlcs.toString());
-    if (sql.toUpperCase().startsWith("INSERT") || sql.toUpperCase().startsWith("UPDATE") || sql.toUpperCase().startsWith("DELETE") || sql.toUpperCase().startsWith("CREATE") || sql.toUpperCase().startsWith("DROP")
+    if (sql.toUpperCase().startsWith("INSERT") || sql.toUpperCase().startsWith("UPDATE") || sql.toUpperCase().startsWith("DELETE") 
+        || sql.toUpperCase().startsWith("CREATE") || sql.toUpperCase().startsWith("DROP")
         || sql.toUpperCase().startsWith("ALTER")) {
       executeUpdate(sql);
       return (null);
     }
     try {
-      Statement stmnt = connection.createStatement(resultSetType, resultSetConcurrency);
-      if (fetchsize != null) stmnt.setFetchSize(fetchsize);
-      return (stmnt.executeQuery(sql));
+      return executeQuery(sql, resultSetType, resultSetConcurrency, fetchsize);
     } catch (SQLException e) {
-      throw e;
+      attemptReconnect(e,autoReconnectOnSelect);
+      return executeQuery(sql, resultSetType, resultSetConcurrency, fetchsize);            
     }
   }
 
@@ -258,6 +517,17 @@ public abstract class Database {
   public int executeUpdate(CharSequence sqlcs) throws SQLException {
     String sql = prepareQuery(sqlcs.toString());
     try {
+      return executeUpdateQuery(sql);
+    } catch (SQLException e) {
+      attemptReconnect(e, autoReconnectOnUpdate);          
+      return executeUpdateQuery(sql);
+    }  
+  }
+  
+  /** Executes an SQL update query, returns the number of rows added/deleted */
+  protected int executeUpdateQuery(String sqlcs) throws SQLException {
+    String sql = prepareQuery(sqlcs.toString());
+    try {
       Statement s = connection.createStatement();
       int result = s.executeUpdate(sql);
       close(s);
@@ -266,17 +536,19 @@ public abstract class Database {
       throw new SQLException(sql + "\n" + e.getMessage());
     }
   }
+  
+
 
   /** Returns the results for a query as a ResultIterator */
   public <T> ResultIterator<T> query(CharSequence sql, ResultIterator.ResultWrapper<T> rc) throws SQLException {
-    return (new ResultIterator<T>(query(sql, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY), rc));
+    return (new ResultIterator<T>(query(sql, resultSetType, resultSetConcurrency), rc));
   }
 
   /** Returns a single value (or null) */
   public <T> T queryValue(CharSequence sql, ResultIterator.ResultWrapper<T> rc) throws SQLException {
     ResultIterator<T> results = new ResultIterator<T>(query(sql), rc);
     T result = results.nextOrNull();
-    results.close();
+    results.close(); //note: if resultiterators complain about being closed twice, hook here
     return (result);
   }
 
@@ -288,9 +560,14 @@ public abstract class Database {
     return (result);
   }
 
+  
+  // ---------------------------------------------------------------------
+  //                  Transactions
+  // ---------------------------------------------------------------------  
+  
   /** indicates whether autocommit was enabled before we switched if off to start a transaction */
   boolean autoCommitWasOn = true;
-
+  
   boolean inTransactionMode = false;
 
   /** Initiates a transaction by disabling autocommit and enabling transaction mode */
@@ -360,20 +637,30 @@ public abstract class Database {
     }
   }
 
+  
+  // ---------------------------------------------------------------------
+  //                  Locking
+  // ---------------------------------------------------------------------  
+
   /** Locks a table in write mode, i.e. other db connections can only read the table, but not write to it */
   public void lockTableWriteAccess(Map<String, String> tableAndAliases) throws SQLException {
-    throw new SQLException("Sorry this functionality is not implemented for you database system by roxxi's database connector (roxxi.tools.database.Database)");
+    throw new SQLException("Sorry this functionality is not implemented for your database system");
   }
 
   /** Locks a table in read mode, i.e. only this connection can read or write the table */
   public void lockTableReadAccess(Map<String, String> tableAndAliases) throws SQLException {
-    throw new SQLException("Sorry this functionality is not implemented for you database system by roxxi's database connector (roxxi.tools.database.Database)");
+    throw new SQLException("Sorry this functionality is not implemented for your database system");
   }
 
   /** releases all locks the connection holds, commits the current transaction and ends it */
   public void releaseLocksAndEndTransaction() throws SQLException {
-    throw new SQLException("Sorry this functionality is not implemented for you database system by roxxi's database connector (roxxi.tools.database.Database)");
+    throw new SQLException("Sorry this functionality is not implemented for your database system");
   }
+
+  
+  // ---------------------------------------------------------------------
+  //                  Describe Queries
+  // ---------------------------------------------------------------------  
 
   /** The minal column width for describe() */
   public static final int MINCOLUMNWIDTH = 3;
@@ -434,65 +721,12 @@ public abstract class Database {
     return (describe(r, -1));
   }
 
-  /** Closes a connection */
-  public static void close(Connection connection) {
-    try {
-      if ((connection != null) && !connection.isClosed()) connection.close();
-    } catch (SQLException e) {
-    }
-  }
-
-  /** Closes a statement */
-  public static void close(Statement statement) {
-    try {
-      if (statement != null) statement.close();
-    } catch (SQLException e) {
-    }
-  }
-
-  /** Closes a result set */
-  public static void close(ResultSet rs) {
-    try {
-      close(rs.getStatement());
-    } catch (SQLException e) {
-    }
-    try {
-      if (rs != null) rs.close();
-    } catch (SQLException e) {
-    }
-  }
-
-  /** Closes the connection */
-  public void close() {
-    if (closed) // we need to make sure we only close it once (either manually or by finalizer)
-    return;
-    if (inTransactionMode) {
-      try {
-        commitTransaction();
-      } catch (TransactionSQLException ex) {
-        Announce.error(ex);
-      }
-    }
-    while (inserters.size() != 0)
-      inserters.get(0).close();
-    close(connection);
-    try {
-      DriverManager.deregisterDriver(driver);
-    } catch (SQLException ex) {
-      Announce.error(ex);
-    }
-    closed = true;
-  }
-
-  /** Closes the connection */
-  public void finalize() {
-    try {
-      close();
-    } catch (Exception e) {
-      Announce.error(e);
-    }
-    ;
-  }
+  
+  
+  
+  /*****************************************************************************************************************    
+   ****                                     Query Generation                                                    ****
+   *****************************************************************************************************************/
 
   /** Returns an SQLType for the given Type as defined in java.sql.Types */
   public SQLType getSQLType(int t) {
@@ -510,29 +744,35 @@ public abstract class Database {
   }
 
   /** Returns an SQLType for the given class */
-  public SQLType getSQLType(Class c) {
+  public SQLType getSQLType(Class<?> c) {
     return (java2SQL.get(c));
   }
 
-  /** returns the database system specific expression for isnull functionality 
-   * i.e. isnull(a,b) returns b if a is null and a otherwise */
+  /** returns the database system specific expression for if-null functionality 
+   * i.e. ifnull(a,b) returns b if a is null and a otherwise */
   public String getSQLStmntIFNULL(String a, String b) {
-    Announce.error("You database system class needs to implement this functionality.");
+    Announce.error("Your database system class needs to implement this functionality.");
     return "";
   }
 
   /** Formats an object appropriately (provided that its class is in java2SQL) */
   public String format(Object o) {
     SQLType t = getSQLType(o.getClass());
-    if (t == null) t = getSQLType(String.class);
-    return (t.format(o.toString()));
+    if (t == null) {
+      t = getSQLType(String.class);
+      return t.format(o.toString());
+    }else
+      return (t.format(o));
   }
 
-  /** Formats an object appropriately (provided that its class is in java2SQL) and assigns NULL it the given object is a null pointer */
+  /** Formats an object appropriately (provided that its class is in java2SQL) 
+   *  and assigns NULL if the given object is a null pointer */
   public String formatNullToNull(Object o) {
     if (o == null) return "NULL";
     else return format(o);
   }
+  
+
 
   /** 
    * Produces an SQL fragment casting the given value to the given type   * 
@@ -543,6 +783,22 @@ public abstract class Database {
     return sql.toString();
   }
 
+
+  /** Makes an SQL query limited to n results */
+  public String limit(String sql, int n) {
+    return (sql + " LIMIT " + n);
+  }
+
+  /** Makes sure a query response starts at the n-th result */
+  public String offset(String sql, int n) {
+    return (sql + " OFFSET " + n);
+  }
+  
+  
+  /*****************************************************************************************************************    
+   ****                                      Table Management                                                   ****
+   *****************************************************************************************************************/
+  
   /** 
    * Produces an SQL fragment representing an autoincrementing column type
    * s.t. if used during table creation a column can be declared to get by default 
@@ -564,6 +820,7 @@ public abstract class Database {
     try {
       executeUpdate("DROP TABLE " + name);
     } catch (SQLException e) {
+      //Announce.warning(e);  //no exception handling on default as an exception might just state that the table is not there, which is perfectly okay when it is created the first time
     }
     StringBuilder b = new StringBuilder("CREATE TABLE ").append(name).append(" (");
     for (int i = 0; i < attributes.length; i += 2) {
@@ -571,7 +828,7 @@ public abstract class Database {
       if (attributes[i + 1] instanceof Integer) {
         b.append(getSQLType((Integer) attributes[i + 1])).append(", ");
       } else {
-        b.append(getSQLType((Class) attributes[i + 1])).append(", ");
+        b.append(getSQLType((Class<?>) attributes[i + 1])).append(", ");
       }
     }
     b.setLength(b.length() - 2);
@@ -612,40 +869,7 @@ public abstract class Database {
     return sb.toString().replace("-", "m");
   }
 
-  /** Creates an index name*/
-  public String indexNameOld(String table, String... attributes) {
-    StringBuilder indexName = new StringBuilder(table);
-    int length = table.length() + 5;
-    //removes brackets for mysql the (160)
-    String[] use = new String[attributes.length];
-    for (int i = 0; i < attributes.length; i++) {
-      int index = attributes[i].indexOf("(");
-      if (index > 0) {
-        use[i] = attributes[i].substring(0, index);
-      } else {
-        use[i] = attributes[i];
-      }
-    }
-    for (String a : use)
-      length = length + a.length();
-    if (length > 30) {
-      int min = 30 - (use.length * 2) - 2;
-      if (min < 5) min = 5;
-      if (min > table.length()) min = table.length();
-      indexName = new StringBuilder(indexName.substring(0, min));
-      for (String a : use)
-        indexName.append(a.substring(0, 2));
-      indexName.append("_I");
-    } else {
-      for (String a : use)
-        indexName.append(a);
-      indexName.append("Index");
-    }
-    if (indexName.length() > 30) {
-      return indexName.substring(0, 30);
-    }
-    return (indexName.toString());
-  }
+
 
   /** Returns the command to create one index on a table */
   public String createIndexCommand(String table, boolean unique, String... attributes) {
@@ -699,199 +923,33 @@ public abstract class Database {
     executeUpdate(sql.toString());
     Announce.doneDetailed();
   }
-
-  public String toString() {
-    return (description);
+  
+  /** creates a view with given name over the query */
+  public void createView(String name, String query) throws SQLException {
+    Announce.doingDetailed("Creating view " + name);
+    Announce.messageDetailed(" with query: "+query);
+    
+    StringBuilder sql = new StringBuilder("CREATE VIEW ");
+    sql.append(name);
+    sql.append(" AS (");
+    sql.append(query);
+    sql.append(")");
+    Announce.debug(sql);
+    try {
+      executeUpdate("DROP VIEW " + name );
+    } catch (SQLException e) {
+      // throw e; //hook here for exception handling; usually disabled as the view might not yet exist when we want to create it (which is not an error) 
+    }
+    executeUpdate(sql.toString());
+    Announce.doneDetailed();
   }
-
-  /** Makes an SQL query limited to n results */
-  public String limit(String sql, int n) {
-    return (sql + " LIMIT " + n);
-  }
-
-  /** Makes sure a query response starts at the n-th result */
-  public String offset(String sql, int n) {
-    return (sql + " OFFSET " + n);
-  }
-
-  /** Runs a user-interface and closes */
-  public void runInterface() {
-    Announce.message("Connected to", this);
-    while (true) {
-      D.p("Enter an SQL query (possibly of multiple lines), followed by a blank line (or just a blank line to quit):");
-      StringBuilder sql = new StringBuilder();
-      String s;
-      while ((s = D.r()).length() != 0)
-        sql.append(s).append("\n");
-      if (sql.length() == 0) break;
-      sql.setLength(sql.length() - 1);
-      Announce.doing("Querying database");
-      if (sql.length() == 0) break;
-      try {
-        ResultSet result = query(sql.toString());
-        Announce.done();
-        if (result != null) D.p(describe(result, 50));
-      } catch (SQLException e) {
-        Announce.failed();
-        e.printStackTrace(System.err);
-        Announce.message("\n\n... but don't give up, try again!");
-      }
-    }
-    Announce.doing("Closing database");
-    close();
-    Announce.done();
-  }
-
-  /** Represents a bulk loader*/
-  public class Inserter implements Closeable {
-
-    /** Holds the prepared statement*/
-    protected PreparedStatement preparedStatement;
-
-    /** Table where the data will be inserted*/
-    protected String tableName;
-
-    /** Column types*/
-    protected SQLType[] columnTypes;
-
-    /** Counts how many commands are in the batch*/
-    protected int batchCounter = 0;
-
-    /** Tells after how many commands we will flush the batch*/
-    private int batchSize = 1000;
-
-    /** tells whether the inserter is already closed */
-    private boolean closed = false;
-
-    public void setBatchSize(int size) {
-      batchSize = size;
-    }
-
-    /** Creates a bulk loader*/
-    public Inserter(String table) throws SQLException {
-      ResultSet r = query(limit("SELECT * FROM " + table, 1));
-      ResultSetMetaData meta = r.getMetaData();
-      columnTypes = new SQLType[meta.getColumnCount()];
-      for (int i = 0; i < columnTypes.length; i++) {
-        columnTypes[i] = getSQLType(meta.getColumnType(i + 1));
-      }
-      Database.close(r);
-      tableName = table;
-      table = "INSERT INTO " + table + " VALUES(";
-      for (int i = 0; i < columnTypes.length - 1; i++)
-        table = table + "?, ";
-      table += "?)";
-      preparedStatement = connection.prepareStatement(table);
-      inserters.add(this);
-    }
-
-    /** Creates a bulk loader for a table with column types given by Java classes*/
-    public Inserter(String table, Class... columnTypes) throws SQLException {
-      this.columnTypes = new SQLType[columnTypes.length];
-      for (int i = 0; i < columnTypes.length; i++) {
-        this.columnTypes[i] = getSQLType(columnTypes[i]);
-      }
-      tableName = table;
-      table = "INSERT INTO " + table + " VALUES(";
-      for (int i = 0; i < columnTypes.length - 1; i++)
-        table = table + "?, ";
-      table += "?)";
-      preparedStatement = connection.prepareStatement(table);
-      inserters.add(this);
-    }
-
-    /** Creates a bulk loader with column types from java.sql.Type */
-    public Inserter(String table, int... columnTypes) throws SQLException {
-      this.columnTypes = new SQLType[columnTypes.length];
-      for (int i = 0; i < columnTypes.length; i++) {
-        this.columnTypes[i] = getSQLType(columnTypes[i]);
-      }
-      tableName = table;
-      table = "INSERT INTO " + table + " VALUES(";
-      for (int i = 0; i < columnTypes.length - 1; i++)
-        table = table + "?, ";
-      table += "?)";
-      preparedStatement = connection.prepareStatement(table);
-      inserters.add(this);
-    }
-
-    /** Returns the table name*/
-    public String getTableName() {
-      return tableName;
-    }
-
-    /** Inserts a row*/
-    public void insert(Object... values) throws SQLException {
-      insert(Arrays.asList(values));
-    }
-
-    public void insert(List<Object> values) throws SQLException {
-      try {
-        for (int i = 0; i < values.size(); i++) {
-          preparedStatement.setObject(i + 1, values.get(i), columnTypes[i].getTypeCode());
-        }
-        preparedStatement.addBatch();
-      } catch (SQLException e) {
-        throw new SQLException("Bulk-insert into " + tableName + " " + values + "\n" + e.getMessage());
-      }
-      if (batchCounter++ % batchSize == 0) flush();
-    }
-
-    /** Flushes the batch*/
-    public void flush() throws SQLException {
-      try {
-        preparedStatement.executeBatch();
-        preparedStatement.clearBatch();
-      } catch (SQLException e) {
-        String details = e.getNextException() == null ? "" : e.getNextException().getMessage();
-        throw new SQLException(e.getMessage() + "\n\n" + details);
-      }
-    }
-
-    /** Flushes and closes*/
-    public void close() {
-      if (closed) // we need to make sure we close only once, either by manual call or when finalizer is called by garbage collection
-      return;
-      try {
-        flush();
-      } catch (SQLException e) {
-        Announce.error(e);
-      }
-      try {
-        preparedStatement.close();
-      } catch (SQLException e) {
-        Announce.warning(e);
-      }
-      inserters.remove(this);
-      closed = true;
-    }
-
-    /** Returns the number of columns*/
-    public int numColumns() {
-      return (columnTypes.length);
-    }
-
-    @Override
-    protected void finalize() {
-      close();
-    }
-  }
-
-  /** Returns an inserter for a table with specific column types*/
-  public Inserter newInserter(String table) throws SQLException {
-    return (new Inserter(table));
-  }
-
-  /** Returns an inserter for a table with specific column types*/
-  public Inserter newInserter(String table, Class... argumentTypes) throws SQLException {
-    return (new Inserter(table, argumentTypes));
-  }
-
-  /** Returns an inserter for a table with specific column types given as java.sql.Type constants*/
-  public Inserter newInserter(String table, int... argumentTypes) throws SQLException {
-    return (new Inserter(table, argumentTypes));
-  }
-
+  
+  
+  
+  /*****************************************************************************************************************    
+   ****                                    Import/Export                                                           ****
+   *****************************************************************************************************************/
+  
   /** Produces a CSV version of the table*/
   public void makeCSV(String table, File output, char separator) throws IOException, SQLException {
     makeCSVForQuery("SELECT * FROM " + table, output, separator);
@@ -961,16 +1019,345 @@ public abstract class Database {
     bulki.close();
   }
 
+  
+  
+  /*****************************************************************************************************************    
+   ****                                           Misc.                                                         ****
+   *****************************************************************************************************************/
+
+  public String toString() {
+    return (description);
+  }
+
+
+  /** Runs a user-interface and closes */
+  public void runInterface() {
+    Announce.message("Connected to", this);
+    while (true) {
+      D.p("Enter an SQL query (possibly of multiple lines), followed by a blank line (or just a blank line to quit):");
+      StringBuilder sql = new StringBuilder();
+      String s;
+      while ((s = D.r()).length() != 0)
+        sql.append(s).append("\n");
+      if (sql.length() == 0) break;
+      sql.setLength(sql.length() - 1);
+      Announce.doing("Querying database");
+      if (sql.length() == 0) break;
+      try {
+        ResultSet result = query(sql.toString());
+        Announce.done();
+        if (result != null) D.p(describe(result, 50));
+      } catch (SQLException e) {
+        Announce.failed();
+        e.printStackTrace(System.err);
+        Announce.message("\n\n... but don't give up, try again!");
+      }
+    }
+    Announce.doing("Closing database");
+    close();
+    Announce.done();
+  }
+
+  
+  
+
+  
   /** Test routine */
   public static void main(String[] args) throws Exception {
     new PostgresDatabase("postgres", "postgres", null, null, null).runInterface();
     //    System.out.println("Does table 'facts' exist:"+ new PostgresDatabase("postgres", "postgres", "yago", null, null).existsTable("facts"));
     //    System.out.println("Does table 'factssss' exist:"+ new PostgresDatabase("postgres", "postgres", "yago", null, null).existsTable("factssss"));    
   }
+  
+  
+  
+  
+  
+  /*****************************************************************************************************************    
+   ****                                      Inserters                                                          ****
+   *****************************************************************************************************************/
+  
+  
+  /** Represents a bulk loader*/
+  public class Inserter implements Closeable {
 
-  // ---------------------------------------------------------------------
-  //           Exceptions
-  // ---------------------------------------------------------------------
+    /** the currently cached values */
+    protected List<List<Object>> values=new ArrayList<List<Object>>();
+
+    /** Table where the data will be inserted*/
+    protected String tableName;
+    
+    /** The locally prepared Query */
+    String query=null;
+
+    /** Column types*/
+    protected SQLType[] columnTypes;
+
+    /** Tells after how many commands we will flush the batch*/
+    private int batchThreshold = 1000;
+
+    /** tells whether the inserter is already closed */
+    private boolean closed = false;
+     
+ 
+    
+    /*****************************************************************************************************************    
+     ****                      Inserter - Initiation and Shutdown                                                 ****
+     *****************************************************************************************************************/
+    
+    
+    /** Creates a bulk loader*/
+    public Inserter(String table) throws SQLException {
+      inserters.add(this);
+      setTargetTable(table);
+    }
+
+    /** Creates a bulk loader for a table with column types given by Java classes*/
+    public Inserter(String table, Class<?>... columnTypes) throws SQLException {
+      inserters.add(this);
+      setTargetTable(table, columnTypes);    
+    }
+    
+    
+
+    /** Creates a bulk loader with column types from java.sql.Type */
+    public Inserter(String table, int... columnTypes) throws SQLException {
+      inserters.add(this);
+      setTargetTable(table, columnTypes);   
+    }
+    
+    /** Creates a bulk loader for specific coloumns of a table with column types given by their names and Java classes*/
+    public Inserter(String table, String[] colnames, Class<?>[] coltypes) throws SQLException {
+      inserters.add(this);
+      setTargetTable(table, colnames, coltypes);
+    }
+    
+    
+
+    /** Flushes and closes */
+    @Override
+    public synchronized void close() {
+      if (closed) // closing once is enough
+      return;
+      try {
+        flush();
+      } catch (SQLException e) {
+        Announce.error(e);
+      }
+      inserters.remove(this);
+      closed = true;
+    }
+
+
+    @Override
+    protected void finalize() {
+      close();   
+    }
+
+    
+    
+    /*****************************************************************************************************************    
+     ****                          Inserter - Attribute Accessors                                                 ****
+     *****************************************************************************************************************/
+
+    public void setBatchThreshold(int size) {
+      batchThreshold = size;
+    }
+    
+    /** returns the batch size set (i.e. after how many entries gathered the inserter should be flushed) */
+    public int getBatchThreshold(){
+      return batchThreshold;
+    }
+    
+    /** Returns the table name*/
+    public String getTableName() {
+     return tableName;
+    }
+    
+    /** returns the number of entries gathered */
+    public int getBatchSize(){
+      return values.size();
+    }
+    
+    
+    /** Returns the number of columns*/
+    public int numColumns() {
+      return (columnTypes.length);
+    }
+    
+
+    /*****************************************************************************************************************    
+     ****                         Inserter - Data insertion                                                       ****
+     *****************************************************************************************************************/
+
+    // ---------------------------------------------------------------------
+    //           Preparation
+    // ---------------------------------------------------------------------
+
+
+    /** Sets the target table into which values shall be inserted */
+    protected void setTargetTable(String table) throws SQLException {
+      ResultSet r = query(limit("SELECT * FROM " + table, 1));
+      ResultSetMetaData meta = r.getMetaData();
+      columnTypes = new SQLType[meta.getColumnCount()];
+      for (int i = 0; i < columnTypes.length; i++) {
+        columnTypes[i] = getSQLType(meta.getColumnType(i + 1));
+      }
+      Database.close(r);
+      tableName = table;
+      table = "INSERT INTO " + table + " VALUES(";
+      for (int i = 0; i < columnTypes.length - 1; i++)
+        table = table + "?, ";
+      table += "?)";
+      query=table;
+    }
+
+    /** Sets the target table into which values shall be inserted 
+     *  with the types of the table columns explicitly given */
+    protected void setTargetTable(String table, Class<?>... columnTypes) throws SQLException {
+      this.columnTypes = new SQLType[columnTypes.length];
+      for (int i = 0; i < columnTypes.length; i++) {
+        this.columnTypes[i] = getSQLType(columnTypes[i]);
+      }
+      tableName = table;
+      table = "INSERT INTO " + table + " VALUES(";
+      for (int i = 0; i < columnTypes.length - 1; i++)
+        table = table + "?, ";
+      table += "?)";
+      query=table;
+    }
+
+    /** Sets the target table into which values shall be inserted 
+     *   with the types of the table columns explicitly given (as java.sql.Type types)*/
+    protected void setTargetTable(String table, int... columnTypes) throws SQLException {
+      this.columnTypes = new SQLType[columnTypes.length];
+      for (int i = 0; i < columnTypes.length; i++) {
+        this.columnTypes[i] = getSQLType(columnTypes[i]);
+      }
+      tableName = table;
+      table = "INSERT INTO " + table + " VALUES(";
+      for (int i = 0; i < columnTypes.length - 1; i++)
+        table = table + "?, ";
+      table += "?)";
+      query=table;
+    }
+
+    protected void setTargetTable(String table, String[] colnames, Class<?>[] coltypes) throws SQLException {
+      if(colnames.length!=coltypes.length)
+        throw new SQLException("Column types and names do not match.");
+      this.columnTypes = new SQLType[colnames.length];
+      int i=0;
+      for (Class<?> col:coltypes) {
+        this.columnTypes[i] = getSQLType(col);
+        i++;
+      }
+      tableName = table;
+      table = "INSERT INTO " + table + "(";
+      table+=StringModifier.implode(colnames, ",");
+      table+=") VALUES(";
+      for (i = 0; i < columnTypes.length - 1; i++)
+        table = table + "?, ";
+      table += "?)";
+      query =table;
+    }
+    
+    // ---------------------------------------------------------------------
+    //           Inserts
+    // ---------------------------------------------------------------------
+
+
+    /** Inserts a row*/
+    public void insert(List<Object> row) throws SQLException {
+      this.values.add(row);
+      if (values.size() % batchThreshold == 0) flush();
+    }
+    
+    /** Inserts a row*/
+    public void insert(Object... values) throws SQLException {
+      insert(Arrays.asList(values));
+    }
+
+
+    /** Flushes the batch*/
+    public synchronized void flush() throws SQLException {
+      
+      if(values.isEmpty())
+        return;
+      List<List<Object>> oldBatch=values;
+      values=new ArrayList<List<Object>>();
+      try {
+        flush(oldBatch);     
+      } catch (SQLException e) {  
+
+        String details = e.getNextException() == null ? "" : e.getNextException().getMessage();
+        SQLException ex= new SQLException(e.getMessage() + "\n\n" + details);
+        try{
+          attemptReconnect(ex, autoReconnectOnUpdate);        
+          flush(oldBatch);
+        } catch (SQLException ex2) {
+          values.addAll(oldBatch);
+          throw ex2;          
+        }                
+      }      
+    }
+
+    protected void flush(List<List<Object>> batch) throws SQLException{
+      PreparedStatement preparedStatement = getConnection().prepareStatement(query);
+      for(List<Object> row: batch){
+        try {
+          for (int i = 0; i < row.size(); i++) {
+            preparedStatement.setObject(i + 1, row.get(i), columnTypes[i].getTypeCode());
+          }
+          preparedStatement.addBatch();
+        } catch (SQLException e) {
+          throw new SQLException("Bulk-insert into " + tableName + " " + row + "\n" + e.getMessage());
+        }
+      }      
+      preparedStatement.executeBatch();
+      preparedStatement.clearBatch();
+      Database.close(preparedStatement);      
+    }
+  }
+
+
+
+  /** Returns an inserter for a table with specific column types*/
+  public Inserter newInserter(String table) throws SQLException {
+    return (new Inserter(table));
+  }
+
+  /** Returns an inserter for a table with specific column types*/
+  public Inserter newInserter(String table, Class<?>... argumentTypes) throws SQLException {
+    return (new Inserter(table, argumentTypes));
+  }
+
+  /** Returns an inserter for a table with specific column types given as java.sql.Type constants*/
+  public Inserter newInserter(String table, int... argumentTypes) throws SQLException {
+    return (new Inserter(table, argumentTypes));
+  }
+
+
+  
+  
+  /*****************************************************************************************************************    
+   ****                                    Exceptions                                                           ****
+   *****************************************************************************************************************/
+  
+  public static class ConnectionBrokenSQLException extends SQLException{
+    private static final long serialVersionUID = 1L;
+    public ConnectionBrokenSQLException(){
+      super();
+    }
+    public ConnectionBrokenSQLException(String message){
+      super(message);
+    }
+    public ConnectionBrokenSQLException(Throwable cause){
+      super(cause);
+    }         
+    public ConnectionBrokenSQLException(String message, Throwable cause){
+      super(message,cause);
+    }       
+  }
 
   public static class TransactionSQLException extends SQLException {
 

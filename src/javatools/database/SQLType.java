@@ -3,7 +3,9 @@ package javatools.database;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.Types;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 import javatools.administrative.D;
 import javatools.parsers.DateParser;
@@ -156,6 +158,12 @@ public abstract class SQLType {
           String s=NumberFormatter.ISOtime(c).replace("T ","");
           s=s.substring(0,s.indexOf('.'));
           return("TIMESTAMP '"+s+"'");
+        }
+        if(o instanceof Date){
+          Date d =(Date)o;
+          SimpleDateFormat format =
+            new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+          return "'"+format.format(d)+"'";
         }
         return(null);
       }

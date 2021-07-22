@@ -3,9 +3,11 @@ package javatools.datatypes;
 import java.io.Closeable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Set;
 
 import javatools.administrative.D;
 /** 
@@ -133,6 +135,23 @@ public abstract class PeekIterator<T> implements Iterator<T>, Iterable<T>, Close
   /** Returns an arraylist of this iterator (killing this iterator)*/
   public List<T> asList() {
     return(asList(this));
+  }
+
+ 
+  /** Fills the elements of an iterator into a given set (killing the iterator)*/
+  public static<T> Set<T> asSet(Iterator<T> i, Set<T> set) {    
+    while(i.hasNext()) set.add(i.next());
+    return(set);
+  }
+  
+  /** Returns a hashset of an iterator (killing the iterator)*/
+  public static<T> Set<T> asSet(Iterator<T> i) {
+    return asSet(i,new HashSet<T>());
+  }
+
+  /** Returns a hashset of this iterator (killing this iterator)*/
+  public Set<T> asSet() {
+    return(asSet(this));
   }
   
   @Override

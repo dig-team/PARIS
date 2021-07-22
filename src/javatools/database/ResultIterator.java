@@ -71,6 +71,14 @@ public class ResultIterator<T> extends PeekIterator<T> {
         close();
       }
 
+      /** ResultWrapper for a single Boolean column */
+      public static final ResultWrapper<Boolean> BooleanWrapper=new ResultWrapper<Boolean>() {
+        public Boolean wrap(ResultSet r) throws SQLException {
+         return r.getBoolean(1);
+        }
+      };
+
+      
       /** ResultWrapper for a single String column */
       public static final ResultWrapper<String> StringWrapper=new ResultWrapper<String>() {
         public String wrap(ResultSet r) throws SQLException {

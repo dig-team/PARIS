@@ -41,11 +41,11 @@ public class Language implements Comparable<Language>{
     if(!supportedLanguage(id))
       throw new LanguageNotSupportedException();
     this.id = id;
-    setPronouns();        
+    initPronouns();        
   }
   
   /** Sets pronoun properties for the current language **/
-  protected void setPronouns(){
+  protected void initPronouns(){
     for(Map.Entry<String,String> prTypes:getPronounTypes(id).entrySet()){
       String split[]=prTypes.getValue().split("\\+:-");
       if(split[0]!=null)

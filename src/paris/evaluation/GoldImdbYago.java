@@ -47,11 +47,11 @@ public class GoldImdbYago extends GoldStandard {
       Announce.doing("Loading IMDB gold standard");
       pierreimdb2yago = new TreeMap<String, String>();
       try {
-        for (String line : new FileLines("c:/fabian/data/yago/fact/hasImdb.tsv", "Loading IMDB movies")) {
+        for (String line : new FileLines("/home/a3nm/DOCUMENTS/stage/paris/ontologies/yagooldtsv/hasImdb.tsv", "Loading IMDB movies")) {
           String[] split = line.split("\t");
           pierreimdb2yago.put("tt" + split[2].substring(1, split[2].length() - 1), name(split[1]));
         }
-        for (String line : new FileLines("c:/fabian/data/imdb/yago2pierre.tsv", "Loading IMDB people")) {
+        for (String line : new FileLines("/home/a3nm/DOCUMENTS/stage/yago2pierre.tsv", "Loading IMDB people")) {
           String[] split = line.split("\t");
           pierreimdb2yago.put(name(split[1]), name(split[0]));
         }

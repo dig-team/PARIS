@@ -38,7 +38,12 @@ public class Pair<F,S> implements Comparable<Pair<F,S>> {
     super();
     this.first=first;
     this.second=second;
-  }  
+  }
+  
+  /** Constructs an empty pair */
+  public Pair(){
+    super();
+  }
 
   public int hashCode() {
     return(first.hashCode()^second.hashCode());

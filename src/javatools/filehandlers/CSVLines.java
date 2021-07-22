@@ -2,7 +2,6 @@ package javatools.filehandlers;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.PushbackReader;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,10 +11,10 @@ import javatools.parsers.Char;
 
 /**
 This class is part of the Java Tools (see http://mpii.de/yago-naga/javatools).
-  It is licensed under the Creative Commons Attribution License 
-  (see http://creativecommons.org/licenses/by/3.0) by 
+  It is licensed under the Creative Commons Attribution License
+  (see http://creativecommons.org/licenses/by/3.0) by
   the YAGO-NAGA team (see http://mpii.de/yago-naga).
-    
+
   The class provides an iterator over the lines in a comma-separated file<BR>
   Example:
   <PRE>
@@ -36,8 +35,8 @@ public class CSVLines extends PeekIterator<List<String>> {
   /** Holds the next char in line */
   protected int nextChar;
   /** Holds the spearator */
-  protected char separator;
-  
+  protected char separator=',';
+
   /** Constructs a CSVReader*/
   public CSVLines(File f) throws IOException {
     in=new FileReader(f);
@@ -53,15 +52,15 @@ public class CSVLines extends PeekIterator<List<String>> {
   public CSVLines(String file) throws IOException {
     this(new File(file));
   }
-  
+
   /** Sets the separator (comma by default)*/
   public void setSeparator(char s) {
     separator=s;
   }
-  
+
   /** Reads a component and the following comma*/
   protected String component() throws IOException {
-    StringBuilder component=new StringBuilder();    
+    StringBuilder component=new StringBuilder();
     // Skip whitespace
     while(Character.isWhitespace(nextChar)) {
       nextChar=in.read();
@@ -74,16 +73,16 @@ public class CSVLines extends PeekIterator<List<String>> {
           nextChar=in.read();
           if(nextChar!='"') break;
         }
-        component.append((char)nextChar);       
+        component.append((char)nextChar);
         nextChar=in.read();
       }
       // Skip following whitespace
-      while(nextChar!=10 && nextChar!=-1 && Character.isWhitespace(nextChar)) {
+      while(nextChar!=10 && nextChar!=13 && nextChar!=-1 && Character.isWhitespace(nextChar)) {
         nextChar=in.read();
-      }      
+      }
     } else {
       // For unquoted components
-      while(nextChar!=-1 && nextChar!=separator && nextChar!=10) {
+      while(nextChar!=-1 && nextChar!=separator && nextChar!=10&& nextChar!=13) {
         component.append((char)nextChar);
         nextChar=in.read();
       }
@@ -93,20 +92,21 @@ public class CSVLines extends PeekIterator<List<String>> {
     if(nextChar==separator) nextChar=in.read();
     return(Char.decode(component.toString()));
   }
-  
+
   @Override
   protected List<String> internalNext() throws Exception {
     if(nextChar==-1) return(null);
     List<String> line=new ArrayList<String>(columns==null?10:columns.size());
-    while(nextChar!=-1 && nextChar!=10) {
+    while(nextChar!=-1 && nextChar!=10&& nextChar!=13) {
       String c=component();
       line.add(c);
     }
     // Read new Line
     nextChar=in.read();
+    if(nextChar==13 || nextChar==10)     nextChar=in.read();
     return line;
   }
-  
+
   /** returns the column names (or NULL)*/
   public List<String> columnNames() {
     return(columns);
@@ -118,12 +118,12 @@ public class CSVLines extends PeekIterator<List<String>> {
   }
 
   @Override
-  public void close() {   
+  public void close() {
     try {
       in.close();
     }catch(Exception e) {}
   }
-  
+
   /** Test method*/
   public static void main(String[] args) throws Exception {
     for(List<String> cols : new CSVLines("./javatools/testdata/CSVTest.csv")) {

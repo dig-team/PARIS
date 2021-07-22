@@ -1,7 +1,12 @@
 package javatools.datatypes;
 
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import javatools.database.Database;
 
@@ -16,7 +21,7 @@ the YAGO-NAGA team (see http://mpii.de/yago-naga).
   This class is a collection of additional string modification methods.
    
   For instance, it provides methods to generate a string from an array, 
-  separating array elements by a given deleminator; 
+  separating array elements by a given delimiter; 
   
   String array[]={"cat", "mouse", "cheese"}; 
   String imploded=StringModifier.implode(array," eats ");
@@ -116,6 +121,79 @@ public abstract class StringModifier {
       return sb.toString();
     }
   }
+  
+  
+  /** Concatenates key value pairs of a Map into a combined String 
+   * representing the pairs as independent column conditions for a database query, 
+   * applying the database.format function to each value
+   * @param map the Map to be imploded 
+   * @param database  the Database instance for which the pairs shall be formatted  */
+  public static String implodeForDBAsConditions(Map<?,?> map, Database database ){
+    if(map==null)
+      return "";
+    if(map.isEmpty())
+      return "";
+    else{
+      return implodeForDB(map.entrySet().iterator()," = "," AND ",database,false,true);
+    }
+  }
+  
+  
+  /** Concatenates key value pairs of a Map into a combined String, 
+   * separating each key from its value by a key-value delimeter 
+   * and each key-value pair by pair delimeter 
+   * while optionally applying the database.format function to each key/value
+   * @param map the Map to be imploded
+   * @param keyValueDelimeter delimeter inserted between each key and its value
+   * @param pairDelimeter delimeter inserted between key-value pairs 
+   * @param database  the Database instance for which the pairs shall be formatted 
+   * @param formatKey flag indicating whether to format the keys with database.format 
+   * @param formatValue flag indicating whether to format the values with database.format */
+  public static String implodeForDB(Map<?,?> map, String keyValueDelim, String pairDelim, Database database, boolean formatKey, boolean formatValue ){
+    if(map==null)
+      return "";
+    if(map.isEmpty())
+      return "";
+    else{
+      return implodeForDB(map.entrySet().iterator(),keyValueDelim,pairDelim,database,formatKey,formatValue);
+    }
+  }
+  
+
+
+  /** Concatenates key value pairs of a Map.Entry iterator into a combined String, 
+   * separating each key from its value by a key-value delimeter 
+   * and each key-value pair by pair delimeter 
+   * while optionally applying the database.format function to each key/value
+   * @param it  the Map.Entry iterator
+   * @param keyValueDelimeter delimeter inserted between each key and its value
+   * @param pairDelimeter delimeter inserted between key-value pairs 
+   * @param database  the Database instance for which the pairs shall be formatted 
+   * @param formatKey flag indicating whether to format the keys with database.format 
+   * @param formatValue flag indicating whether to format the values with database.format */
+  public static <T,K> String implodeForDB(Iterator<Entry<T,K>> it, String keyValueDelim, String pairDelim, Database database, boolean formatKey, boolean formatValue ){
+    if(it==null)
+      return "";
+    if(!it.hasNext())
+      return "";
+    else{
+      StringBuffer sb = new StringBuffer();
+      Map.Entry<T, K> entry=it.next();
+      sb.append(formatKey?database.format(entry.getKey()):entry.getKey());
+      sb.append(keyValueDelim);
+      sb.append(formatValue?database.format(entry.getValue()):entry.getValue());
+      
+      while (it.hasNext()){
+        sb.append(pairDelim);
+        
+        entry=it.next();
+        sb.append(formatKey?database.format(entry.getKey()):entry.getKey());
+        sb.append(keyValueDelim);
+        sb.append(formatValue?database.format(entry.getValue()):entry.getValue());        
+      }
+      return sb.toString();
+    }
+  }
 
   
   
@@ -126,6 +204,32 @@ public abstract class StringModifier {
     if(s.length()>length)
       return s.substring(0,length);
     else return s;
+  }
+  
+  
+  /** produces an n-gram set from the string 
+   * @param original  the String to be split into n-grams of size n 
+   * @param n size of the n-grams
+   * @return  set of n-grams */
+  public static Set<String> toNGram(String original, int n ){
+    Set<String> ngrams = new HashSet<String>();
+    for (int i=0;i<original.length();i++)
+      ngrams.add(original.substring(i, i+n));
+    return ngrams;
+  }
+  
+  /** produces a weighed n-gram set from the string 
+   * @param original  the String to be split into n-grams of size n 
+   * @param n size of the n-grams
+   * @return  map of n-grams with their weight (frequency/overall number of ngrams) */
+  public static Map<String,Double> toWeighedNGram(String original, int n ){
+    Map<String,Double> ngrams = new HashMap<String,Double>();
+    for (int i=0;i<original.length();i++){
+      String ngram=original.substring(i, Math.min(i+n, original.length()-1));
+      Double oldVal=ngrams.get(ngram);
+      ngrams.put(ngram, oldVal!=null?oldVal+(1d/original.length()):(1d/original.length()));
+    }    
+    return ngrams;
   }
   
   /** Test method */

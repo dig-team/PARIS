@@ -133,7 +133,21 @@ public class NumberFormatter {
            twoDigits.format(c.get(Calendar.SECOND))+"."+
            fourDigits.format(c.get(Calendar.MILLISECOND)));
   }
-  
+
+  /** Returns an ISO8601 string representation of the current date */
+  public static String ISOdate() {
+    return(ISOdate(new GregorianCalendar()));
+  }
+
+  /** Returns an ISO8601 string representation of the time given
+      by the calendar*/
+  public static String ISOdate(Calendar c) {
+    return((c.get(Calendar.ERA)==GregorianCalendar.BC?"-":"")+
+           fourDigits.format(c.get(Calendar.YEAR))+'-'+
+           twoDigits.format(c.get(Calendar.MONTH)+1)+'-'+
+           twoDigits.format(c.get(Calendar.DAY_OF_MONTH)));
+  }
+
   /** Returns an ISO8601 string representation of the current time,
       using a week-oriented representation*/
   public static String ISOweekTime() {

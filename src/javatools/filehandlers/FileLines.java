@@ -35,8 +35,7 @@ import javatools.datatypes.PeekIterator;
  * no more lines, the file is closed. If you do not use all lines of the
  * iterator, close the iterator manually.
  */
-public class FileLines extends PeekIterator<String> implements
-		Iterable<String>, Iterator<String>, Closeable {
+public class FileLines extends PeekIterator<String> implements Iterable<String>, Iterator<String>, Closeable {
 	/** number of chars for announce (or -1) */
 	protected long announceChars = -1;
 	/** Containes the Reader */
@@ -52,36 +51,41 @@ public class FileLines extends PeekIterator<String> implements
 		this(f, null);
 	}
 
-  /** Constructs FileLines from a filename, shows progress bar */
-  public FileLines(String f, String announceMsg) throws IOException {
-    this(new File(f), announceMsg);
-  }
-  /** Constructs FileLines from a filename with a given encoding, shows progress bar */
-  public FileLines(String f, String encoding, String announceMsg) throws IOException {
-    this(new File(f), encoding, announceMsg);
-  }
+	/** Constructs FileLines from a filename, shows progress bar */
+	public FileLines(String f, String announceMsg) throws IOException {
+		this(new File(f), announceMsg);
+	}
 
-  /**
-   * Constructs FileLines from a file with an encoding, shows progress bar (main constructor 1)
-   */
-  public FileLines(File f, String encoding, String announceMsg) throws IOException {
-    if (announceMsg != null) {
-      Announce.progressStart(announceMsg, f.length());
-      announceChars = 0;
-    }
-    br = new BufferedReader(new InputStreamReader(new FileInputStream(f),encoding));
-  }
-  
-  /**
-   * Constructs FileLines from a file, shows progress bar (main constructor 2)
-   */
-  public FileLines(File f, String announceMsg) throws IOException {
-    if (announceMsg != null) {
-      Announce.progressStart(announceMsg, f.length());
-      announceChars = 0;
-    }
-    br = new BufferedReader(new FileReader(f));
-  }
+	/**
+	 * Constructs FileLines from a filename with a given encoding, shows
+	 * progress bar
+	 */
+	public FileLines(String f, String encoding, String announceMsg) throws IOException {
+		this(new File(f), encoding, announceMsg);
+	}
+
+	/**
+	 * Constructs FileLines from a file with an encoding, shows progress bar
+	 * (main constructor 1)
+	 */
+	public FileLines(File f, String encoding, String announceMsg) throws IOException {
+		if (announceMsg != null) {
+			Announce.progressStart(announceMsg, f.length());
+			announceChars = 0;
+		}
+		br = new BufferedReader(new InputStreamReader(new FileInputStream(f), encoding));
+	}
+
+	/**
+	 * Constructs FileLines from a file, shows progress bar (main constructor 2)
+	 */
+	public FileLines(File f, String announceMsg) throws IOException {
+		if (announceMsg != null) {
+			Announce.progressStart(announceMsg, f.length());
+			announceChars = 0;
+		}
+		br = new BufferedReader(new FileReader(f));
+	}
 
 	/** Constructs FileLines from a Reader */
 	public FileLines(Reader f) {
@@ -100,8 +104,7 @@ public class FileLines extends PeekIterator<String> implements
 
 	/** Unsupported, throws an UnsupportedOperationException */
 	public void remove() throws UnsupportedOperationException {
-		throw new UnsupportedOperationException(
-				"FileLines does not support \"remove\"");
+		throw new UnsupportedOperationException("FileLines does not support \"remove\"");
 	}
 
 	/**
@@ -175,8 +178,7 @@ public class FileLines extends PeekIterator<String> implements
 	 * 
 	 * @throws IOException
 	 */
-	public static int findIgnoreCase(Reader in, String... findMe)
-			throws IOException {
+	public static int findIgnoreCase(Reader in, String... findMe) throws IOException {
 		int[] pos = new int[findMe.length];
 		for (int i = 0; i < findMe.length; i++)
 			findMe[i] = findMe[i].toUpperCase();
@@ -206,8 +208,7 @@ public class FileLines extends PeekIterator<String> implements
 	 * 
 	 * @throws IOException
 	 */
-	public static CharSequence readTo(Reader in, char... limit)
-			throws IOException {
+	public static CharSequence readTo(Reader in, char... limit) throws IOException {
 		StringBuilder result = new StringBuilder();
 		int c;
 		outer: while ((c = in.read()) != -1) {
@@ -222,13 +223,59 @@ public class FileLines extends PeekIterator<String> implements
 	}
 
 	/**
+	 * Reads to a whitespace
+	 * 
+	 * @throws IOException
+	 */
+	public static CharSequence readToSpace(Reader in) throws IOException {
+		StringBuilder result = new StringBuilder();
+		int c;
+		outer: while ((c = in.read()) != -1) {
+			if (Character.isWhitespace(c))
+				break outer;
+			result.append((char) c);
+			if (maxChars != -1 && result.length() > maxChars)
+				break;
+		}
+		return (result);
+	}
+
+	/**
+	 * Skips space
+	 * 
+	 * @throws IOException
+	 */
+	public static int firstCharAfterSpace(Reader in) throws IOException {
+		int c;
+		while ((c = in.read()) != -1 && Character.isWhitespace(c)){}
+		return (c);
+	}
+
+	/**
+	 * Reads to a specific character, returns the text in between
+	 * 
+	 * @throws IOException
+	 */
+	public static CharSequence readTo(Reader in, char limit) throws IOException {
+		StringBuilder result = new StringBuilder();
+		int c;
+		outer: while ((c = in.read()) != -1) {
+			if (c == limit)
+				break outer;
+			result.append((char) c);
+			if (maxChars != -1 && result.length() > maxChars)
+				break;
+		}
+		return (result);
+	}
+
+	/**
 	 * Reads to a specific String, returns the text up to there, including the
 	 * limit
 	 * 
 	 * @throws IOException
 	 */
-	public static CharSequence readTo(Reader in, String limit)
-			throws IOException {
+	public static CharSequence readTo(Reader in, String limit) throws IOException {
 		StringBuilder result = new StringBuilder(2000);
 		int c;
 		int position = 0;
@@ -247,8 +294,56 @@ public class FileLines extends PeekIterator<String> implements
 		return (result);
 	}
 
+	/** Reads to a specific string, returns text up to there, without boundary or returns NULL*/
+	public static String readToBoundary(Reader in, String limit) throws IOException {
+		StringBuilder result = new StringBuilder(2000);
+		int c;
+		int position = 0;
+		while ((c = in.read()) != -1) {
+			result.append((char) c);
+
+			if (c == limit.charAt(position)) {
+				if (++position == limit.length())
+					return(result.toString().substring(0,result.length()-limit.length()));
+			} else {
+				position = 0;
+			}
+			if (maxChars != -1 && result.length() > maxChars)
+				return(null);
+		}
+		return (null);
+	}
 	/**
-	 * Reads to a specific String
+	 * Scrolls to one of the characters
+	 * 
+	 * @throws IOException
+	 */
+	public static boolean scrollTo(Reader in, char... delimiters) throws IOException {
+		int c;
+		while ((c = in.read()) != -1) {
+			for (int i = 0; i < delimiters.length; i++)
+				if (c == delimiters[i])
+					return (true);
+		}
+		return (false);
+	}
+
+	/**
+	 * Reads to a specific character
+	 * 
+	 * @throws IOException
+	 */
+	public static boolean scrollTo(Reader in, char delimiter) throws IOException {
+		int c;
+		while ((c = in.read()) != -1) {
+			if (c == delimiter)
+				return (true);
+		}
+		return (false);
+	}
+
+	/**
+	 * Scrolls to a specific limit and beyond
 	 * 
 	 * @throws IOException
 	 */
@@ -271,15 +366,16 @@ public class FileLines extends PeekIterator<String> implements
 	 * 
 	 * @throws IOException
 	 */
-	public static String readBetween(Reader in, String start, String end)
-			throws IOException {
+	public static String readBetween(Reader in, String start, String end) throws IOException {
 		if (!scrollTo(in, start))
 			return (null);
-		CharSequence r=readTo(in, end);
-		if(r==null) return(null);
-		String s=r.toString();
-		if(!s.endsWith(end)) return(null);
-		return (r.toString().substring(0,r.length()-end.length()));
+		CharSequence r = readTo(in, end);
+		if (r == null)
+			return (null);
+		String s = r.toString();
+		if (!s.endsWith(end))
+			return (null);
+		return (r.toString().substring(0, r.length() - end.length()));
 	}
 
 	/**
@@ -289,7 +385,7 @@ public class FileLines extends PeekIterator<String> implements
 	 */
 	public static String readBetween(String in, String start, String end) {
 		try {
-			return(readBetween(new StringReader(in), start, end));
+			return (readBetween(new StringReader(in), start, end));
 		} catch (Exception e) {
 			return (null);
 		}
@@ -301,8 +397,7 @@ public class FileLines extends PeekIterator<String> implements
 	 * 
 	 * @throws IOException
 	 */
-	public static CharSequence readTo(Reader in, String limit,
-			List<Integer> results) throws IOException {
+	public static CharSequence readTo(Reader in, String limit, List<Integer> results) throws IOException {
 		StringBuilder result = new StringBuilder();
 		int c;
 		int position = 0;
@@ -321,23 +416,26 @@ public class FileLines extends PeekIterator<String> implements
 		return (result);
 	}
 
-	/** returns number of lines in file*/
-	public static int numFileLines(File f)throws IOException  {
-		int counter=0;
-		for(@SuppressWarnings("unused") String l : new FileLines(f,"Counting lines in"+f)) counter++;
-		return(counter);
+	/** returns number of lines in file */
+	public static int numFileLines(File f) throws IOException {
+		int counter = 0;
+		for (@SuppressWarnings("unused")
+		String l : new FileLines(f, "Counting lines in" + f))
+			counter++;
+		return (counter);
 	}
-	
-	/** returns number of lines in file*/
-	public static int numAllFileLines(File f,String ext)throws IOException  {
-		if(f.isFile()) return(f.getName().endsWith(ext)?numFileLines(f):0);
-		int counter=0;
-		Announce.doing("Counting in",f);
-		for(File f2 : f.listFiles()) {
-			counter+=numAllFileLines(f2,ext);
+
+	/** returns number of lines in file */
+	public static int numAllFileLines(File f, String ext) throws IOException {
+		if (f.isFile())
+			return (f.getName().endsWith(ext) ? numFileLines(f) : 0);
+		int counter = 0;
+		Announce.doing("Counting in", f);
+		for (File f2 : f.listFiles()) {
+			counter += numAllFileLines(f2, ext);
 		}
 		Announce.done();
-		return(counter);
+		return (counter);
 	}
-	
+
 }

@@ -2,12 +2,14 @@ package paris;
 
 import java.io.Serializable;
 import java.util.AbstractMap;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
+import java.util.Vector;
+import java.util.Map.Entry;
 
 /** 
 This class is inspired by class MultiMap of the Java Tools (see http://mpii.de/yago-naga/javatools).
@@ -15,33 +17,63 @@ It is licensed under the Creative Commons Attribution License
 (see http://creativecommons.org/licenses/by/3.0) by 
 the YAGO-NAGA team (see http://mpii.de/yago-naga).
 
-This class can be used to keep track of a non-functional, directed relation
+This class uses a HashMap to map A's to sets of B's: the implementation of sets of B's is defined when calling the constructor.
 */
+
+
+@SuppressWarnings("serial")
 public class MultiMap<A, B> implements Iterable<Entry<A,B>>, Serializable {
-  private Map<A, Set<B>> relation;
+
+	public interface Factory<T> extends Serializable {
+	  T newInstance();
+	  T newInstance(Integer num);
+	}
+	
+	public static class HashSetFactory<T> implements Factory<HashSet<T>>{
+		public HashSet<T> newInstance() {
+			return new HashSet<T>();
+		}
+		public HashSet<T> newInstance(Integer num) {
+			return new HashSet<T>(num);
+		}
+	}
+	
+	public static class VectorFactory<T> implements Factory<Vector<T>>{
+		public Vector<T> newInstance() {
+			return new Vector<T>();
+		}
+		public Vector<T> newInstance(Integer num) {
+			return new Vector<T>(num);
+		}
+	}
+	
+	private Factory<? extends Collection<B>> factory;
+  private Map<A, Collection<B>> relation;
   int initialHashSetSize = 0;
   
-  public MultiMap() {
-    relation = new HashMap<A, Set<B>>();
+  public MultiMap(Factory<? extends Collection<B>> factory) {
+  	this.factory = factory;
+    relation = new HashMap<A, Collection<B>>();
   }
   
-  public MultiMap(int initialSize) {
-    relation = new HashMap<A, Set<B>>(initialSize);
+  public MultiMap(Factory<? extends Collection<B>> factory, int initialSize) {
+  	this.factory = factory;
+    relation = new HashMap<A, Collection<B>>(initialSize);
   }
   
-  public MultiMap(int initialSize, int initialHashSetSize) {
-    this(initialSize);
+  public MultiMap(Factory<? extends Collection<B>> clazz, int initialSize, int initialHashSetSize) {
+    this(clazz, initialSize);
     this.initialHashSetSize = initialHashSetSize;
   }
   
   public void put(A a, B b) {
-    Set<B> bs = relation.get(a);
+    Collection<B> bs = relation.get(a);
     
     if (bs == null) {
     	if (initialHashSetSize == 0)
-        bs = new HashSet<B>();
+        bs = factory.newInstance();
     	else
-    		bs = new HashSet<B>(initialHashSetSize);
+    		bs = factory.newInstance(initialHashSetSize);
       relation.put(a, bs);
     }
     
@@ -54,12 +86,12 @@ public class MultiMap<A, B> implements Iterable<Entry<A,B>>, Serializable {
     }
   }
   
-  public Set<B> get(A a) {
+  public Collection<B> get(A a) {
     return relation.get(a);
   }
   
   public boolean contains(Entry<A, B> e) {
-    Set<B> test = relation.get(e.getKey());
+    Collection<B> test = relation.get(e.getKey());
     
     if (test == null) {
       return false;
@@ -129,20 +161,29 @@ public class MultiMap<A, B> implements Iterable<Entry<A,B>>, Serializable {
     @Override
     public void remove() {
       // not supported
+    	assert(false);
     }
   }
   
   public boolean containsKey(A key) {
- 		Set<B> values = get(key);
+ 		Collection<B> values = get(key);
  		if (values == null) return false;
  		return !values.isEmpty();
 	}
   
-  public Set<B> getOrEmpty(A key) {
-  	Set<B> result = get(key);
+  public Collection<B> getOrEmpty(A key) {
+  	Collection<B> result = get(key);
   	if (result == null) {
-  		return new HashSet<B>();
+  		return factory.newInstance();
   	}
   	return result;
   }
+  
+  public Set<A> keySet() {
+  	return relation.keySet();
+  }
+
+	public void clear() {
+		relation.clear();
+	}
 }

@@ -2,7 +2,9 @@ package javatools.database;
 
 import java.sql.Driver;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.SQLFeatureNotSupportedException;
 import java.sql.Types;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -101,7 +103,7 @@ public class OracleDatabase extends Database {
     Driver driver;
     driver = (Driver) Class.forName("oracle.jdbc.driver.OracleDriver").newInstance();
     DriverManager.registerDriver(driver);
-    resetConnection();
+    connect();
     description = "ORACLE database " + user + "/" + password + " at " + host + ":" + port + " instance " + inst;
   }
 
@@ -113,9 +115,17 @@ public class OracleDatabase extends Database {
   /** Holds the String by which the connection can be reset*/
   protected String connectionString;
 
-  /** Resets the connection. */
+  /** Resets the connection. 
+   * @deprecated  replaced by {@link #reconnect()} */
+  @Deprecated
   public void resetConnection() throws SQLException {
     close(connection);
+    connect();
+  }
+  
+  /** connects to the database specified */
+  @Override
+  public void connect () throws SQLException{
     connection = DriverManager.getConnection(connectionString);
     connection.setAutoCommit(true);
   }
@@ -195,6 +205,24 @@ public class OracleDatabase extends Database {
     return false;
   }
 
+  /** Checks whether the connection to the database is still alive */
+  @Override
+  public boolean connected()  {
+    try{
+      return (!connection.isClosed())&&connection.isValid(validityCheckTimeout);
+    } catch (SQLFeatureNotSupportedException nosupport){
+      try{
+        ResultSet rs= query("SELECT 1 FROM DUAL",resultSetType,resultSetConcurrency,null);
+        close(rs);
+        return true;
+      }catch (SQLException ex){
+        return false;
+      }
+    } catch (SQLException ex){
+      throw new RuntimeException("This is very unexpected and actually should never happen.", ex);
+    }    
+  }
+  
   public static void main(String[] args) {
     OracleDatabase database = new OracleDatabase();
     String sql = "SELECT arg2 FROM facts WHERE relation=something AND arg1= something";

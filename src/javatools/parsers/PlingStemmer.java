@@ -224,7 +224,8 @@ public class PlingStemmer {
    "nurses",
    "cruises",
    "premises",
-   "houses"
+   "houses",
+   "course"
   );
 
   /** Words that do not have a distinct plural form (like "atlas" etc.)*/
