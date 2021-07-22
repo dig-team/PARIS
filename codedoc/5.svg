@@ -1,0 +1,31 @@
+<svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'
+ height='600' width='1000'>
+  <defs>
+    <marker id='mblack' markerHeight='3' markerUnits='strokeWidth' markerWidth='4' orient='auto' refX='0' refY='5' viewBox='0 0 10 10'>
+      <path d='M 0 0 L 10 5 L 0 10 z' fill='black' stroke='black'/>
+    </marker>
+    <marker id='mblue' markerHeight='3' markerUnits='strokeWidth' markerWidth='4' orient='auto' refX='0' refY='5' viewBox='0 0 10 10'>
+      <path d='M 0 0 L 10 5 L 0 10 z' fill='blue' stroke='blue'/>
+    </marker>
+    <marker id='mred' markerHeight='3' markerUnits='strokeWidth' markerWidth='4' orient='auto' refX='0' refY='5' viewBox='0 0 10 10'>
+      <path d='M 0 0 L 10 5 L 0 10 z' fill='red' stroke='red'/>
+    </marker>
+    <marker id='mgreen' markerHeight='3' markerUnits='strokeWidth' markerWidth='4' orient='auto' refX='0' refY='5' viewBox='0 0 10 10'>
+      <path d='M 0 0 L 10 5 L 0 10 z' fill='green' stroke='green'/>
+    </marker>
+  </defs>
+  <a id='_nextSlide' xlink:href='6.svg'>
+    <rect fill='white' height='600' id='_background' stroke='none' width='1000' x='0' y='0'/>
+    <text font-family='sans-serif' font-size='50' x='50' y='50'>Running Paris</text>
+    <g fill='black' font-family='sans-serif' transform='translate(54, 113) scale(2.0, 2.0)'>
+      <text font-size='10' x='0' y='10'>1. Create FactStores for both ontologies by running paris.FactStore</text>
+      <text font-size='10' x='0' y='25'>&#xa0;   (These will occupy two distinct folders on your hard drive)</text>
+      <text font-size='10' x='0' y='40'></text>
+      <text font-size='10' x='0' y='55'>2. Create an empty setting file</text>
+      <text font-size='10' x='0' y='70'></text>
+      <text font-size='10' x='0' y='85'>3. Run paris.Paris with that empty setting file</text>
+      <text font-size='10' x='0' y='100'>&#xa0;   PARIS will ask for all required information</text>
+      <text font-size='10' x='0' y='115'>&#xa0;   and store that in the setting file for next time.</text>
+    </g>
+  </a>
+</svg>

@@ -1,0 +1,49 @@
+<svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'
+ height='600' width='1000'>
+  <defs>
+    <marker id='mblack' markerHeight='3' markerUnits='strokeWidth' markerWidth='4' orient='auto' refX='0' refY='5' viewBox='0 0 10 10'>
+      <path d='M 0 0 L 10 5 L 0 10 z' fill='black' stroke='black'/>
+    </marker>
+    <marker id='mblue' markerHeight='3' markerUnits='strokeWidth' markerWidth='4' orient='auto' refX='0' refY='5' viewBox='0 0 10 10'>
+      <path d='M 0 0 L 10 5 L 0 10 z' fill='blue' stroke='blue'/>
+    </marker>
+    <marker id='mred' markerHeight='3' markerUnits='strokeWidth' markerWidth='4' orient='auto' refX='0' refY='5' viewBox='0 0 10 10'>
+      <path d='M 0 0 L 10 5 L 0 10 z' fill='red' stroke='red'/>
+    </marker>
+    <marker id='mgreen' markerHeight='3' markerUnits='strokeWidth' markerWidth='4' orient='auto' refX='0' refY='5' viewBox='0 0 10 10'>
+      <path d='M 0 0 L 10 5 L 0 10 z' fill='green' stroke='green'/>
+    </marker>
+  </defs>
+  <a id='_nextSlide' xlink:href='4.svg'>
+    <rect fill='white' height='600' id='_background' stroke='none' width='1000' x='0' y='0'/>
+    <text font-family='sans-serif' font-size='50' x='50' y='50'>Fact Stores</text>
+    <ellipse cx='395' cy='204' fill='none' rx='124' ry='80' stroke='blue' stroke-width='3'/>
+    <text fill='red' font-family='sans-serif' font-size='20' x='315' y='319'>paris.FactStore</text>
+    <image height='61' width='59' x='291' xlink:href='elvis.jpg' y='187'/>
+    <text fill='blue' font-family='sans-serif' font-size='20' x='324' y='157'>singer</text>
+    <text _text='singer' fill='blue' font-family='sans-serif' font-size='20' x='444' y='217'>guitar</text>
+    <line marker-end='url(#mblue)' stroke='blue' stroke-width='3' x1='325' x2='337' y1='189' y2='167'/>
+    <line marker-end='url(#mblue)' stroke='blue' stroke-width='3' x1='351' x2='431' y1='221' y2='211'/>
+    <text fill='blue' font-family='sans-serif' font-size='20' x='362' y='210'>plays</text>
+    <g fill='black' font-family='sans-serif' transform='translate(24, 164) scale(2.0, 2.0)'>
+      <text font-size='10' x='0' y='10'>An ontology is stored</text>
+      <text font-size='10' x='0' y='25'>in a "FactStore"</text>
+    </g>
+    <rect fill='none' height='40' stroke='yellow' stroke-width='3' width='40' x='810' y='91'/>
+    <rect fill='none' height='40' stroke='yellow' stroke-width='3' width='40' x='812' y='162'/>
+    <rect fill='none' height='40' stroke='yellow' stroke-width='3' width='40' x='814' y='239'/>
+    <line marker-end='url(#mred)' stroke='red' stroke-width='3' x1='814' x2='538' y1='110' y2='167'/>
+    <line marker-end='url(#mred)' stroke='red' stroke-width='3' x1='813' x2='544' y1='182' y2='192'/>
+    <line marker-end='url(#mred)' stroke='red' stroke-width='3' x1='815' x2='542' y1='260' y2='226'/>
+    <text fill='black' font-family='sans-serif' font-size='20' x='858' y='113'>RDF/OWL XML</text>
+    <text _text='RDF' fill='black' font-family='sans-serif' font-size='20' x='860' y='184'>NT</text>
+    <text _text='RDF/OWL XML' fill='black' font-family='sans-serif' font-size='20' x='859' y='264'>YAGO/TSV</text>
+    <text _text='equality.probabilistic.FactStore' fill='red' font-family='sans-serif' font-size='20' x='587' y='104'>FactStore.main()</text>
+    <g fill='black' font-family='sans-serif' transform='translate(31, 406) scale(2.0, 2.0)'>
+      <text font-size='10' x='0' y='10'>&#x2022; fact stores can be created from RDF, OWL, NT, TSV and YAGO files</text>
+      <text font-size='10' x='0' y='25'>&#xa0;   just run FactStore.main()</text>
+      <text font-size='10' x='0' y='40'>&#x2022; the fact store occupies a physical folder on the hard drive</text>
+      <text font-size='10' x='0' y='55'>&#x2022; the fact store is implemented as a Berkeley DB, with entities identified by numeric keys</text>
+    </g>
+  </a>
+</svg>

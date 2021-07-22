@@ -1,0 +1,61 @@
+<svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'
+ height='600' width='1000'>
+  <defs>
+    <marker id='mblack' markerHeight='3' markerUnits='strokeWidth' markerWidth='4' orient='auto' refX='0' refY='5' viewBox='0 0 10 10'>
+      <path d='M 0 0 L 10 5 L 0 10 z' fill='black' stroke='black'/>
+    </marker>
+    <marker id='mblue' markerHeight='3' markerUnits='strokeWidth' markerWidth='4' orient='auto' refX='0' refY='5' viewBox='0 0 10 10'>
+      <path d='M 0 0 L 10 5 L 0 10 z' fill='blue' stroke='blue'/>
+    </marker>
+    <marker id='mred' markerHeight='3' markerUnits='strokeWidth' markerWidth='4' orient='auto' refX='0' refY='5' viewBox='0 0 10 10'>
+      <path d='M 0 0 L 10 5 L 0 10 z' fill='red' stroke='red'/>
+    </marker>
+    <marker id='mgreen' markerHeight='3' markerUnits='strokeWidth' markerWidth='4' orient='auto' refX='0' refY='5' viewBox='0 0 10 10'>
+      <path d='M 0 0 L 10 5 L 0 10 z' fill='green' stroke='green'/>
+    </marker>
+  </defs>
+  <a id='_nextSlide' xlink:href='5.svg'>
+    <rect fill='white' height='600' id='_background' stroke='none' width='1000' x='0' y='0'/>
+    <text font-family='sans-serif' font-size='50' x='50' y='50'>Settings</text>
+    <ellipse cx='395' cy='204' fill='none' rx='124' ry='80' stroke='blue' stroke-width='3'/>
+    <image height='61' width='59' x='291' xlink:href='elvis.jpg' y='187'/>
+    <text fill='blue' font-family='sans-serif' font-size='20' x='324' y='157'>singer</text>
+    <text _text='singer' fill='blue' font-family='sans-serif' font-size='20' x='444' y='217'>guitar</text>
+    <line marker-end='url(#mblue)' stroke='blue' stroke-width='3' x1='325' x2='337' y1='189' y2='167'/>
+    <line marker-end='url(#mblue)' stroke='blue' stroke-width='3' x1='351' x2='431' y1='221' y2='211'/>
+    <text fill='blue' font-family='sans-serif' font-size='20' x='362' y='210'>plays</text>
+    <g fill='black' font-family='sans-serif' transform='translate(12, 134) scale(2.0, 2.0)'>
+      <text font-size='10' x='0' y='10'>Two FactStores</text>
+      <text font-size='10' x='0' y='25'>together, plus a</text>
+      <text font-size='10' x='0' y='40'>(partial) Result</text>
+      <text font-size='10' x='0' y='55'>form a "Setting"</text>
+    </g>
+    <line marker-end='url(#mblue)' stroke='blue' stroke-width='3' x1='680' x2='692' y1='191' y2='169'/>
+    <ellipse cx='758' cy='200' fill='none' rx='152' ry='78' stroke='blue' stroke-width='3'/>
+    <line marker-end='url(#mblue)' stroke='blue' stroke-width='3' x1='716' x2='818' y1='221' y2='212'/>
+    <image height='57' width='56' x='659' xlink:href='elvis.jpg' y='192'/>
+    <text _text='guitar' fill='blue' font-family='sans-serif' font-size='20' x='830' y='215'>guitar</text>
+    <text _text='chanteur' fill='blue' font-family='sans-serif' font-size='20' x='649' y='157'>chanteur</text>
+    <text _text='joue' fill='blue' font-family='sans-serif' font-size='20' x='743' y='205'>joue</text>
+    <text fill='red' font-family='sans-serif' font-size='20' x='543' y='75'>paris.Setting</text>
+    <rect fill='none' height='105' stroke='blue' stroke-width='3' width='146' x='502' y='384'/>
+    <g _text='elvis1\u003delvis2\u000aplays\u003djoue\u000a\u002e\u002e\u002e' fill='blue' font-family='sans-serif' transform='translate(512, 390) scale(2.0, 2.0)'>
+      <text font-size='10' x='0' y='10'>elvis1=elvis2</text>
+      <text font-size='10' x='0' y='25'>plays=joue</text>
+      <text font-size='10' x='0' y='40'>...</text>
+    </g>
+    <rect fill='none' height='449' stroke='blue' stroke-width='3' width='712' x='245' y='89'/>
+    <g fill='black' font-family='sans-serif' transform='translate(15, 295) scale(2.0, 2.0)'>
+      <text font-size='10' x='0' y='10'>A setting also contains</text>
+      <text font-size='10' x='0' y='25'>the number of iterations</text>
+      <text font-size='10' x='0' y='40'>to run. You can start</text>
+      <text font-size='10' x='0' y='55'>with few iterations</text>
+      <text font-size='10' x='0' y='70'>and later add more.</text>
+    </g>
+    <text fill='blue' font-family='sans-serif' font-size='20' x='711' y='399'>startIteration=0</text>
+    <text _text='startIteration=0' fill='blue' font-family='sans-serif' font-size='20' x='710' y='438'>endIteration=3</text>
+    <text fill='blue' font-family='sans-serif' font-size='20' x='351' y='312'>FactStore 1</text>
+    <text fill='blue' font-family='sans-serif' font-size='20' x='714' y='312'>FactStore 2</text>
+    <text fill='blue' font-family='sans-serif' font-size='20' x='509' y='515'>(partial) result</text>
+  </a>
+</svg>
