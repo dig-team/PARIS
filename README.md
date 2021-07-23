@@ -20,9 +20,12 @@ To do that, PARIS needs two knowledge bases (KBs), which each contain:
 4. a large number of facts between an instance and a literal (such as `hasName`, `hasID`, `hasBirthDate`, etc.). PARIS needs these to bootstrap its algorithm, and will not work without.
 5. optionally a class hierarchy (taxonomy).
 
-PARIS dates from 2012, and has not been updated since. It is no longer maintained,
-but it still works. PARIS differs from modern knowledge graph alignment (KG alignment)
-methods in the following ways:
+See [here](https://suchanek.name/work/publications/vldb2012/index.html) for a slideshow, and [here](https://www.youtube.com/watch?v=Fom62wWTHK) for a recorded talk.
+
+PARIS today
+----------
+
+PARIS dates from 2012. It has not been updated since, and it is no longer maintained. However, it still works, and it is used as a baseline for modern knowledge graph alignment (KG alignment) methods. PARIS differs from these methods in the following ways:
 1. PARIS aligns not just instances, but also relations and classes. That is: if one KB calls the relation `wasBornInCity`, and the other KB calls it `birthPlace`, then PARIS will find out that these relations are the same. This works also if one relation merely subsumes the other. The same goes for classes (finding, e.g., that `Singers` in one KB is a subclass of `Artists` in the other).
 2. PARIS deals also with relations whose objects are literals, such as `wasBornOnDate`, `hasNumberOfInhabitants`, etc.
 3. PARIS can deal with the situation where not all instances of one KB have a matching counterpart in the other KB.
@@ -56,7 +59,8 @@ If you use PARIS for academic works, please cite
 
 > Fabian M. Suchanek, Serge Abiteboul, Pierre Senellart:  
 > [“PARIS: Probabilistic Alignment of Relations, Instances, and Relations”](https://suchanek.name/work/publications/vldb2012.pdf)  
-> International Conference on Very Large Databases (VLDB), 2012
+> International Conference on Very Large Databases (VLDB), 2012  
+> [Slideshow](https://suchanek.name/work/publications/vldb2012/index.html)
 
 A detailed comparison of PARIS with KG Alignment approaches can be found in
 > Xiang Zhao, Weixin Zeng, Jiuyang Tang, Wei Wang, Fabian M. Suchanek:  
