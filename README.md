@@ -62,10 +62,17 @@ If you use PARIS for academic works, please cite
 > International Conference on Very Large Databases (VLDB), 2012  
 > [Slideshow](https://suchanek.name/work/publications/vldb2012/index.html)
 
+An update of PARIS is discussed in
+
+> Antoine Amarilli, Luis Galárraga, Nicoleta Preda, Fabian M. Suchanek:  
+> [“Recent Research Topics around the YAGO Knowledge Base”](https://suchanek.name/work/publications/apweb2014.pdf)  
+> Asia Pacific Web Conference  (APWEB), 2014
+
 A detailed comparison of PARIS with KG Alignment approaches can be found in
+
 > Xiang Zhao, Weixin Zeng, Jiuyang Tang, Wei Wang, Fabian M. Suchanek:  
 > [“An Experimental Study of State-of-the-Art Entity Alignment Approaches”](https://suchanek.name/work/publications/tkde-2020.pdf)  
-> [IEEE Transactions on Knowledge and Data Engineering  (TKDE) 2020](https://ieeexplore.ieee.org/xpl/RecentIssue.jsp?punumber=69)
+> [IEEE Transactions on Knowledge and Data Engineering  (TKDE), 2020](https://ieeexplore.ieee.org/xpl/RecentIssue.jsp?punumber=69)
 
 Running PARIS
 ------------
