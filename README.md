@@ -27,10 +27,11 @@ methods in the following ways:
 2. PARIS deals also with relations whose objects are literals, such as `wasBornOnDate`, `hasNumberOfInhabitants`, etc.
 3. PARIS can deal with the situation where not all instances of one KB have a matching counterpart in the other KB.
 4. Finally, PARIS does not need any training data. It works out of the box.
+
 These differences have to be taken into account when PARIS is compared to other systems.
 
-Contributors
-------------
+License
+--------
 
 PARIS is a project of the [Webdam team at INRIA Saclay](http://webdam.inria.fr/wordpress/index.html). The main contributors
 are:
@@ -40,9 +41,6 @@ are:
 * [Antoine Amarilli](http://a3nm.net)
 * [Serge Abiteboul](https://abiteboul.com/)
 * Mayur Garg
-
-License
---------
 
 PARIS is available under the [Creative Commons BY-NC license](https://creativecommons.org/licenses/by-nc/3.0/). This means that PARIS can be used freely, except for commercial purposes. Furthermore, the authors of PARIS do not guarantee that the code works as intended.
 
@@ -56,13 +54,13 @@ Publications
 
 If you use PARIS for academic works, please cite
 
-> Fabian M. Suchanek, Serge Abiteboul, Pierre Senellart:
-> [“PARIS: Probabilistic Alignment of Relations, Instances, and Relations”](https://suchanek.name/work/publications/vldb2012.pdf)
+> Fabian M. Suchanek, Serge Abiteboul, Pierre Senellart:  
+> [“PARIS: Probabilistic Alignment of Relations, Instances, and Relations”](https://suchanek.name/work/publications/vldb2012.pdf)  
 > International Conference on Very Large Databases (VLDB), 2012
 
 A detailed comparison of PARIS with KG Alignment approaches can be found in
-> Xiang Zhao, Weixin Zeng, Jiuyang Tang, Wei Wang, Fabian M. Suchanek:
-> [“An Experimental Study of State-of-the-Art Entity Alignment Approaches”](https://suchanek.name/work/publications/tkde-2020.pdf)
+> Xiang Zhao, Weixin Zeng, Jiuyang Tang, Wei Wang, Fabian M. Suchanek:  
+> [“An Experimental Study of State-of-the-Art Entity Alignment Approaches”](https://suchanek.name/work/publications/tkde-2020.pdf)  
 > [IEEE Transactions on Knowledge and Data Engineering  (TKDE) 2020](https://ieeexplore.ieee.org/xpl/RecentIssue.jsp?punumber=69)
 
 Running PARIS
