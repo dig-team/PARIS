@@ -1085,13 +1085,15 @@ public class Paris {
 		if (args == null || args.length < 1) {
 			Announce
 					.help(
-							"Paris <settingFile>\n",
-							"You can specify a file that has no content.",
-							"PARIS will ask for the necessary data and store it in <settingFile>.\n",
-							"Paris <ontology1> <ontology2> <outputFolder>\n",
-							"Shorthand for the previous form.\n",
-							"Paris <factstore> <dump>\n",
-							"Dump all entities of factstore to dump");
+							"PARIS aligns the instances, relations, and classes of two knowledge bases (KBs).\n",
+							"java paris.Paris <settingFile>",
+							"      You can specify a file that has no content.",
+							"      PARIS will then ask for the necessary data and store it in <settingFile>.\n",
+							"java paris.Paris <kb1> <kb2> <outputFolder>",
+							"      Aligns <kb1> and <kb2>, puts the results into <outputFolder>.\n",
+							"java paris.Paris <factstore> <dump>",
+							"      Dumps all entities of <factstore> to the file <dump>\n",
+							"See http://webdam.inria.fr/paris/ for further information.");
 			System.exit(1);
 		}
 		

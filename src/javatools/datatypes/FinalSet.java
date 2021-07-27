@@ -1,7 +1,9 @@
 package javatools.datatypes;
-import java.util.AbstractList;
+import java.util.AbstractSet;
 import java.util.Arrays;
 import java.util.Set;
+import java.util.Arrays;
+import java.util.Iterator;
 
 import javatools.administrative.D;
 /** 
@@ -28,7 +30,7 @@ Example:
    --> b
 </PRE>
 */
-public class FinalSet<T extends Comparable> extends AbstractList<T> implements Set<T>{
+public class FinalSet<T extends Comparable> extends AbstractSet<T>{
   /** Holds the data, must be sorted */
   public T[] data;  
   /** Constructs a FinalSet from an array, clones and sorts the array if indicated. */
@@ -63,6 +65,11 @@ public class FinalSet<T extends Comparable> extends AbstractList<T> implements S
   /** Returns the number of elements in this FinalSet */
   public int size() {
     return(data.length);
+  }
+  
+  /** Returns an iterator*/
+  public Iterator<T> iterator() {
+	  return(Arrays.asList(data).iterator());
   }
   
   /** Test routine */
