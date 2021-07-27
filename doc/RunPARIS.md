@@ -22,18 +22,18 @@ Running PARIS
 
 There are three ways to invoke PARIS:
 * Fast track:
-    `java -jar paris_0_3.jar <kb1> <kb2> <outputfolder>`
+    `java -jar paris.jar <kb1> <kb2> <outputfolder>`
   where `<kb1>` and `<jb2>` are the knowledge bases. Each can be either
     an individual N-triples file or a folder that contains such files.
   `<outputfolder>` is a folder where PARIS can work.
 * Detailed track:
-    `java -jar paris_0_3.jar <settingsfile>`
+    `java -jar paris.jar <settingsfile>`
   where `<settingsfile>` is an existing, but empty file. In this mode, PARIS
   will ask the user for the settings and store them in `<settingsfile>`. Many
   settings can be added in `<settingsfile>` to change the behavior of PARIS, cf.
   `Settings.java`.
 * Detailed reuse track:
-   `java -jar paris_0_3.jar <settingsfile>`
+   `java -jar paris.jar <settingsfile>`
   where `<settingsfile>` is a previously generated setting file.
   
 Output
