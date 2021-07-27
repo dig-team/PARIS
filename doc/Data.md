@@ -34,7 +34,9 @@ We also matched [YAGO](https://yago-knowledge.org) and [IMDb](https://www.imdb.c
 
 *Again, these sources have changed and we are currently unable to reproduce the original experimental results!*
 
-We still make available 
+The IMDB dataset is available upon request.
+
+We also make available 
 - The gold standard [for relations](../data/yago-imdb-relations-gold.txt). The file contains a tab-separated list of subproperty-superproperty pairs.
 - The gold standard [for instances](../data/yago-imdb-instances-gold.zip). The file is a tab-separated list of YAGO names and IMDB person/movie identifiers.
 - The gold standard [for classes](../data/yago-imdb-classes-gold.txt). The file contains a tab-separated list of subclass-superclass pairs, together with the notion TRUE or FALSE. Note that this gold standard is incomplete and can serve only to compute precision, not recall! 
