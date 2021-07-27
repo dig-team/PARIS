@@ -76,8 +76,8 @@ A detailed comparison of PARIS with KG Alignment approaches can be found in
 
 Running PARIS
 ------------
-See doc/RunPARIS.md
+See [doc/RunPARIS.md](doc/RunPARIS.md)
 
 Experimental Data
 ------------
-See doc/Data.md
+See [doc/Data.md](doc/Data.md)
