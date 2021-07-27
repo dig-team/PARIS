@@ -1,0 +1,404 @@
+TRUE	http://yago-knowledge.org/resource/wikicategory_Government_ministers_of_Afghanistan	http://dbpedia.org/ontology/Politician
+FALSE	http://yago-knowledge.org/resource/wikicategory_Welsh_people_of_Irish_descent	http://dbpedia.org/ontology/Athlete
+TRUE	http://yago-knowledge.org/resource/wikicategory_Major_League_Baseball_team_presidents	http://dbpedia.org/ontology/Person
+TRUE	http://yago-knowledge.org/resource/wikicategory_Cities_in_New_Hampshire	http://dbpedia.org/ontology/Settlement
+FALSE	http://yago-knowledge.org/resource/wikicategory_Conflicts_in_Nova_Scotia	http://dbpedia.org/ontology/Settlement
+TRUE	http://yago-knowledge.org/resource/wikicategory_People_convicted_of_murder_by_Arkansas	http://dbpedia.org/ontology/Criminal
+TRUE	http://yago-knowledge.org/resource/wikicategory_Indie_video_games	http://dbpedia.org/ontology/Work
+FALSE	http://yago-knowledge.org/resource/wikicategory_Provinces_of_the_Netherlands	http://dbpedia.org/ontology/Settlement
+TRUE	http://yago-knowledge.org/resource/wikicategory_Tommy_Boy_Records_artists	http://dbpedia.org/ontology/Actor
+TRUE	http://yago-knowledge.org/resource/wikicategory_United_States_government_officials	http://dbpedia.org/ontology/Person
+FALSE	http://yago-knowledge.org/resource/wikicategory_People_from_North_Yorkshire	http://dbpedia.org/ontology/Politician
+FALSE	http://yago-knowledge.org/resource/wikicategory_Columbia_Lions_football_players	http://dbpedia.org/ontology/Actor
+TRUE	http://yago-knowledge.org/resource/wikicategory_People_from_Mid_Suffolk_(district)	http://dbpedia.org/ontology/Person
+TRUE	http://yago-knowledge.org/resource/wikicategory_USC_Trojans_football_players	http://dbpedia.org/ontology/Person
+TRUE	http://yago-knowledge.org/resource/wikicategory_Persian_poets	http://dbpedia.org/ontology/Person
+FALSE	http://yago-knowledge.org/resource/wikicategory_World_War_II_spies_for_Great_Britain	http://dbpedia.org/ontology/Book
+FALSE	http://yago-knowledge.org/resource/wikicategory_People_from_Stornoway	http://dbpedia.org/ontology/Artist
+TRUE	http://yago-knowledge.org/resource/wikicategory_American_actors_of_Swedish_descent	http://dbpedia.org/ontology/Actor
+FALSE	http://yago-knowledge.org/resource/wikicategory_People_from_Wallasey	http://dbpedia.org/ontology/SoccerPlayer
+TRUE	http://yago-knowledge.org/resource/wikicategory_Musicals_based_on_anime_and_manga	http://dbpedia.org/ontology/Work
+TRUE	http://yago-knowledge.org/resource/wikicategory_Sports_clubs_established_in_1925	http://dbpedia.org/ontology/Organisation
+TRUE	http://yago-knowledge.org/resource/wikicategory_Rivers_of_Ohio	http://dbpedia.org/ontology/Stream
+TRUE	http://yago-knowledge.org/resource/wikicategory_People_of_Carinthian_Slovene_descent	http://dbpedia.org/ontology/Person
+TRUE	http://yago-knowledge.org/resource/wikicategory_Systems_theory_books	http://dbpedia.org/ontology/Work
+TRUE	http://yago-knowledge.org/resource/wikicategory_County_seats_in_New_Mexico	http://dbpedia.org/ontology/Place
+TRUE	http://yago-knowledge.org/resource/wikicategory_Immigrants_to_the_United_Kingdom	http://dbpedia.org/ontology/Person
+FALSE	http://yago-knowledge.org/resource/wikicategory_Thomas_Gainsborough_paintings	http://dbpedia.org/ontology/Artist
+FALSE	http://yago-knowledge.org/resource/wikicategory_English_bowls_players	http://dbpedia.org/ontology/Cricketer
+FALSE	http://yago-knowledge.org/resource/wikicategory_People_from_Hammersmith	http://dbpedia.org/ontology/Athlete
+TRUE	http://yago-knowledge.org/resource/wikicategory_British_ska_musical_groups	http://dbpedia.org/ontology/Band
+FALSE	http://yago-knowledge.org/resource/wikicategory_1885_operas	http://dbpedia.org/ontology/TelevisionEpisode
+FALSE	http://yago-knowledge.org/resource/wikicategory_Canadian_male_sprinters	http://dbpedia.org/ontology/Actor
+TRUE	http://yago-knowledge.org/resource/wikicategory_Birds_of_Guadeloupe	http://dbpedia.org/ontology/Animal
+TRUE	http://yago-knowledge.org/resource/wikicategory_Drummers_from_Northern_Ireland	http://dbpedia.org/ontology/Artist
+FALSE	http://yago-knowledge.org/resource/wikicategory_Commerce_goddesses	http://dbpedia.org/ontology/Mammal
+FALSE	http://yago-knowledge.org/resource/wikicategory_People_from_Bellingham,_Washington	http://dbpedia.org/ontology/Artist
+TRUE	http://yago-knowledge.org/resource/wikicategory_Helicopter_manufacturers_of_Germany	http://dbpedia.org/ontology/Company
+TRUE	http://yago-knowledge.org/resource/wikicategory_Bridges_completed_in_1831	http://dbpedia.org/ontology/Building
+TRUE	http://yago-knowledge.org/resource/wikicategory_Organisations_based_in_Norfolk	http://dbpedia.org/ontology/Organisation
+TRUE	http://yago-knowledge.org/resource/wikicategory_Historic_districts_in_Colorado	http://dbpedia.org/ontology/Place
+TRUE	http://yago-knowledge.org/resource/wikicategory_People_from_Dare_County,_North_Carolina	http://dbpedia.org/ontology/Person
+FALSE	http://yago-knowledge.org/resource/wikicategory_Borders_of_California	http://dbpedia.org/ontology/River
+TRUE	http://yago-knowledge.org/resource/wikicategory_TBS_network_shows	http://dbpedia.org/ontology/Work
+TRUE	http://yago-knowledge.org/resource/wikicategory_Roman_Empire_paintings	http://dbpedia.org/ontology/Work
+TRUE	http://yago-knowledge.org/resource/wikicategory_American_harpists	http://dbpedia.org/ontology/Artist
+TRUE	http://yago-knowledge.org/resource/wikicategory_Populated_places_established_in_the_1310s	http://dbpedia.org/ontology/Settlement
+TRUE	http://yago-knowledge.org/resource/wikicategory_Disney_direct-to-video_films	http://dbpedia.org/ontology/Work
+FALSE	http://yago-knowledge.org/resource/wikicategory_A_Christmas_Carol_characters	http://dbpedia.org/ontology/SoccerPlayer
+TRUE	http://yago-knowledge.org/resource/wikicategory_Conflicts_in_1807	http://dbpedia.org/ontology/Event
+FALSE	http://yago-knowledge.org/resource/wikicategory_People_from_Meopham	http://dbpedia.org/ontology/Actor
+TRUE	http://yago-knowledge.org/resource/wikicategory_Municipalities_in_Leeds_and_Grenville_United_Counties,_Ontario	http://dbpedia.org/ontology/PopulatedPlace
+TRUE	http://yago-knowledge.org/resource/wikicategory_People_from_Schönbrunn	http://dbpedia.org/ontology/Person
+TRUE	http://yago-knowledge.org/resource/wikicategory_Algerian_immigrants_to_Canada	http://dbpedia.org/ontology/Person
+FALSE	http://yago-knowledge.org/resource/wikicategory_People_from_Penistone	http://dbpedia.org/ontology/Scientist
+TRUE	http://yago-knowledge.org/resource/wikicategory_Artists_of_the_American_West	http://dbpedia.org/ontology/Person
+TRUE	http://yago-knowledge.org/resource/wikicategory_I.R.S._Records_albums	http://dbpedia.org/ontology/Album
+TRUE	http://yago-knowledge.org/resource/wikicategory_English_golfers	http://dbpedia.org/ontology/Person
+FALSE	http://yago-knowledge.org/resource/wikicategory_1999_concert_tours	http://dbpedia.org/ontology/Album
+FALSE	http://yago-knowledge.org/resource/wikicategory_Hungarian_expatriates_in_Canada	http://dbpedia.org/ontology/Writer
+TRUE	http://yago-knowledge.org/resource/wikicategory_McDonald's_buildings_and_structures	http://dbpedia.org/ontology/Building
+TRUE	http://yago-knowledge.org/resource/wikicategory_Veins_of_the_torso	http://dbpedia.org/ontology/AnatomicalStructure
+FALSE	http://yago-knowledge.org/resource/wikicategory_Plateaus_of_China	http://dbpedia.org/ontology/Artist
+TRUE	http://yago-knowledge.org/resource/wikicategory_Dallas_Mavericks_players	http://dbpedia.org/ontology/Athlete
+FALSE	http://yago-knowledge.org/resource/wikicategory_Sports_teams_in_Maryland	http://dbpedia.org/ontology/CanadianFootballTeam
+FALSE	http://yago-knowledge.org/resource/wikicategory_Buildings_and_structures_in_Middlesex_County,_Connecticut	http://dbpedia.org/ontology/HistoricPlace
+FALSE	http://yago-knowledge.org/resource/wikicategory_People_from_Lac_qui_Parle_County,_Minnesota	http://dbpedia.org/ontology/Governor
+FALSE	http://yago-knowledge.org/resource/wikicategory_Canadian_graphic_novels	http://dbpedia.org/ontology/Software
+TRUE	http://yago-knowledge.org/resource/wikicategory_Comptrollers_of_Illinois	http://dbpedia.org/ontology/Politician
+TRUE	http://yago-knowledge.org/resource/wikicategory_New_Zealand_prisoners_of_war	http://dbpedia.org/ontology/MilitaryPerson
+TRUE	http://yago-knowledge.org/resource/wikicategory_Binghamton_Mets_players	http://dbpedia.org/ontology/Person
+TRUE	http://yago-knowledge.org/resource/wikicategory_Australian_non-fiction_books	http://dbpedia.org/ontology/Book
+TRUE	http://yago-knowledge.org/resource/wikicategory_Movie_theatre_chains_in_the_United_States	http://dbpedia.org/ontology/Company
+TRUE	http://yago-knowledge.org/resource/wikicategory_Books_about_Canada	http://dbpedia.org/ontology/Book
+TRUE	http://yago-knowledge.org/resource/wikicategory_Towns_in_Stirling_council_area	http://dbpedia.org/ontology/Settlement
+TRUE	http://yago-knowledge.org/resource/wikicategory_Workers'_Party_(Singapore)_politicians	http://dbpedia.org/ontology/Person
+TRUE	http://yago-knowledge.org/resource/wikicategory_1993_television_episodes	http://dbpedia.org/ontology/TelevisionEpisode
+TRUE	http://yago-knowledge.org/resource/wikicategory_Catalan_bishops	http://dbpedia.org/ontology/Person
+TRUE	http://yago-knowledge.org/resource/wikicategory_Presidents_of_Azerbaijan	http://dbpedia.org/ontology/President
+TRUE	http://yago-knowledge.org/resource/wikicategory_Hill_forts_in_Berkshire	http://dbpedia.org/ontology/Settlement
+TRUE	http://yago-knowledge.org/resource/wikicategory_People_executed_by_Indiana	http://dbpedia.org/ontology/Person
+TRUE	http://yago-knowledge.org/resource/wikicategory_People_convicted_of_crimes_against_humanity	http://dbpedia.org/ontology/Person
+TRUE	http://yago-knowledge.org/resource/wikicategory_Expatriate_association_footballers_in_the_Republic_of_Ireland	http://dbpedia.org/ontology/SoccerManager
+TRUE	http://yago-knowledge.org/resource/wikicategory_Marty_Friedman_albums	http://dbpedia.org/ontology/Album
+TRUE	http://yago-knowledge.org/resource/wikicategory_Railway_stations_closed_in_1934	http://dbpedia.org/ontology/Station
+TRUE	http://yago-knowledge.org/resource/wikicategory_Tubular_bridges	http://dbpedia.org/ontology/Bridge
+TRUE	http://yago-knowledge.org/resource/wikicategory_Populated_coastal_places_in_Pakistan	http://dbpedia.org/ontology/Place
+TRUE	http://yago-knowledge.org/resource/wikicategory_New_York_Mets_broadcasters	http://dbpedia.org/ontology/Organisation
+TRUE	http://yago-knowledge.org/resource/wikicategory_Decorative_arts_museums_in_the_United_States	http://dbpedia.org/ontology/Museum
+TRUE	http://yago-knowledge.org/resource/wikicategory_Peoria_Rivermen_(IHL)_players	http://dbpedia.org/ontology/Person
+TRUE	http://yago-knowledge.org/resource/wikicategory_People_from_McIntosh_County,_Oklahoma	http://dbpedia.org/ontology/Person
+TRUE	http://yago-knowledge.org/resource/wikicategory_Bridges_in_Massachusetts	http://dbpedia.org/ontology/Place
+FALSE	http://yago-knowledge.org/resource/wikicategory_Animals_described_in_1956	http://dbpedia.org/ontology/Fish
+TRUE	http://yago-knowledge.org/resource/wikicategory_Restaurants_in_Toronto	http://dbpedia.org/ontology/Company
+TRUE	http://yago-knowledge.org/resource/wikicategory_Czechoslovak_footballers	http://dbpedia.org/ontology/SoccerPlayer
+FALSE	http://yago-knowledge.org/resource/wikicategory_Kamehameha_Schools	http://dbpedia.org/ontology/Work
+TRUE	http://yago-knowledge.org/resource/wikicategory_Films_directed_by_Archie_Mayo	http://dbpedia.org/ontology/Work
+FALSE	http://yago-knowledge.org/resource/wikicategory_Alumni_of_Ridley_Hall,_Cambridge	http://dbpedia.org/ontology/Cleric
+TRUE	http://yago-knowledge.org/resource/wikicategory_Manufacturing_companies_of_Russia	http://dbpedia.org/ontology/Organisation
+TRUE	http://yago-knowledge.org/resource/wikicategory_Indian_violinists	http://dbpedia.org/ontology/Person
+TRUE	http://yago-knowledge.org/resource/wikicategory_McGill_Redmen_ice_hockey_players	http://dbpedia.org/ontology/IceHockeyPlayer
+TRUE	http://yago-knowledge.org/resource/wikicategory_Populated_places_in_Sharjah	http://dbpedia.org/ontology/Place
+TRUE	http://yago-knowledge.org/resource/wikicategory_People_from_Bureau_County,_Illinois	http://dbpedia.org/ontology/Person
+TRUE	http://yago-knowledge.org/resource/wikicategory_Railway_companies_of_Estonia	http://dbpedia.org/ontology/Company
+TRUE	http://yago-knowledge.org/resource/wikicategory_The_Beach_Boys_live_albums	http://dbpedia.org/ontology/Album
+TRUE	http://yago-knowledge.org/resource/wikicategory_Women_state_legislators_in_Hawaii	http://dbpedia.org/ontology/OfficeHolder
+TRUE	http://yago-knowledge.org/resource/wikicategory_Fictional_characters_from_Las_Vegas,_Nevada	http://dbpedia.org/ontology/Eukaryote
+TRUE	http://yago-knowledge.org/resource/wikicategory_Private_schools_in_Austria	http://dbpedia.org/ontology/EducationalInstitution
+TRUE	http://yago-knowledge.org/resource/wikicategory_Delegates_to_the_1816_Indiana_constitutional_convention	http://dbpedia.org/ontology/Person
+TRUE	http://yago-knowledge.org/resource/wikicategory_East_Lancashire_Regiment_officers	http://dbpedia.org/ontology/MilitaryPerson
+TRUE	http://yago-knowledge.org/resource/wikicategory_Documentary_films_about_mental_illness	http://dbpedia.org/ontology/Work
+FALSE	http://yago-knowledge.org/resource/wikicategory_Brigham_Young_University–Idaho_alumni	http://dbpedia.org/ontology/Artist
+TRUE	http://yago-knowledge.org/resource/wikicategory_Parkland_High_School_alumni	http://dbpedia.org/ontology/Person
+FALSE	http://yago-knowledge.org/resource/wikicategory_Bishops_of_Newcastle	http://dbpedia.org/ontology/Athlete
+TRUE	http://yago-knowledge.org/resource/wikicategory_Video_games_based_on_films_directed_by_Tim_Burton	http://dbpedia.org/ontology/VideoGame
+TRUE	http://yago-knowledge.org/resource/wikicategory_Museums_in_Plymouth,_Massachusetts	http://dbpedia.org/ontology/Place
+TRUE	http://yago-knowledge.org/resource/wikicategory_Projekt_Records_albums	http://dbpedia.org/ontology/MusicalWork
+TRUE	http://yago-knowledge.org/resource/wikicategory_Olympic_badminton_players_of_Germany	http://dbpedia.org/ontology/BadmintonPlayer
+TRUE	http://yago-knowledge.org/resource/wikicategory_Schools_in_Scotland	http://dbpedia.org/ontology/Organisation
+TRUE	http://yago-knowledge.org/resource/wikicategory_People_from_Port_Glasgow	http://dbpedia.org/ontology/Person
+TRUE	http://yago-knowledge.org/resource/wikicategory_Odd_Grenland_players	http://dbpedia.org/ontology/Person
+TRUE	http://yago-knowledge.org/resource/wikicategory_Players_of_American_football_from_Oregon	http://dbpedia.org/ontology/AmericanFootballPlayer
+FALSE	http://yago-knowledge.org/resource/wikicategory_Georgia_Bulldogs_and_Lady_Bulldogs	http://dbpedia.org/ontology/Place
+TRUE	http://yago-knowledge.org/resource/wikicategory_British_Columbia_municipal_politicians	http://dbpedia.org/ontology/OfficeHolder
+FALSE	http://yago-knowledge.org/resource/wikicategory_People_from_the_Province_of_Genoa	http://dbpedia.org/ontology/Scientist
+TRUE	http://yago-knowledge.org/resource/wikicategory_Appalachian_old-time_fiddlers	http://dbpedia.org/ontology/MusicalArtist
+TRUE	http://yago-knowledge.org/resource/wikicategory_Sudanese_judges	http://dbpedia.org/ontology/Person
+FALSE	http://yago-knowledge.org/resource/wikicategory_Russian_expatriates_in_Italy	http://dbpedia.org/ontology/SoccerManager
+TRUE	http://yago-knowledge.org/resource/wikicategory_Italian_rock_music_groups	http://dbpedia.org/ontology/Organisation
+FALSE	http://yago-knowledge.org/resource/wikicategory_People_from_Kut	http://dbpedia.org/ontology/SoccerPlayer
+TRUE	http://yago-knowledge.org/resource/wikicategory_Hospitals_in_Washington_(U.S._state)	http://dbpedia.org/ontology/Building
+TRUE	http://yago-knowledge.org/resource/wikicategory_People_from_Butler_County,_Kentucky	http://dbpedia.org/ontology/Person
+FALSE	http://yago-knowledge.org/resource/wikicategory_People_from_Hod_HaSharon	http://dbpedia.org/ontology/Writer
+TRUE	http://yago-knowledge.org/resource/wikicategory_High_schools_in_Sussex_County,_New_Jersey	http://dbpedia.org/ontology/School
+FALSE	http://yago-knowledge.org/resource/wikicategory_Footballers_at_the_1936_Summer_Olympics	http://dbpedia.org/ontology/SoccerManager
+FALSE	http://yago-knowledge.org/resource/wikicategory_Australian_racecar_constructors	http://dbpedia.org/ontology/Athlete
+FALSE	http://yago-knowledge.org/resource/wikicategory_People_from_Nové_Zámky_District	http://dbpedia.org/ontology/SoccerPlayer
+TRUE	http://yago-knowledge.org/resource/wikicategory_IUP_Crimson_Hawks_football_players	http://dbpedia.org/ontology/Athlete
+FALSE	http://yago-knowledge.org/resource/wikicategory_Cities_and_towns_in_West_Sikkim_district	http://dbpedia.org/ontology/BodyOfWater
+TRUE	http://yago-knowledge.org/resource/wikicategory_A.C._Arezzo_players	http://dbpedia.org/ontology/Athlete
+TRUE	http://yago-knowledge.org/resource/wikicategory_Railway_locomotives_introduced_in_1973	http://dbpedia.org/ontology/MeanOfTransportation
+FALSE	http://yago-knowledge.org/resource/wikicategory_New_York_state_forests	http://dbpedia.org/ontology/River
+TRUE	http://yago-knowledge.org/resource/wikicategory_New_Zealand_Roman_Catholic_archbishops	http://dbpedia.org/ontology/Cardinal
+FALSE	http://yago-knowledge.org/resource/wikicategory_People_from_Butler_County,_Alabama	http://dbpedia.org/ontology/Athlete
+TRUE	http://yago-knowledge.org/resource/wikicategory_Companies_based_in_Northumberland	http://dbpedia.org/ontology/Company
+FALSE	http://yago-knowledge.org/resource/wikicategory_Belly_dancers	http://dbpedia.org/ontology/Organisation
+TRUE	http://yago-knowledge.org/resource/wikicategory_Songwriters_from_Georgia_(U.S._state)	http://dbpedia.org/ontology/Person
+TRUE	http://yago-knowledge.org/resource/wikicategory_Music_videos_directed_by_Spike_Jonze	http://dbpedia.org/ontology/Work
+TRUE	http://yago-knowledge.org/resource/wikicategory_New_York_Central_Railroad_bridges_and_tunnels	http://dbpedia.org/ontology/Bridge
+FALSE	http://yago-knowledge.org/resource/wikicategory_Animated_human_characters	http://dbpedia.org/ontology/TelevisionShow
+TRUE	http://yago-knowledge.org/resource/wikicategory_Neighborhoods_in_Jersey_City,_New_Jersey	http://dbpedia.org/ontology/Place
+TRUE	http://yago-knowledge.org/resource/wikicategory_Municipalities_of_San_Luis_Potosí	http://dbpedia.org/ontology/Settlement
+TRUE	http://yago-knowledge.org/resource/wikicategory_College_baseball_coaches_in_the_United_States	http://dbpedia.org/ontology/CollegeCoach
+TRUE	http://yago-knowledge.org/resource/wikicategory_Repertoire_Records_albums	http://dbpedia.org/ontology/Work
+FALSE	http://yago-knowledge.org/resource/wikicategory_Spanish-language_television_shows_in_the_United_States	http://dbpedia.org/ontology/Place
+FALSE	http://yago-knowledge.org/resource/wikicategory_People_executed_for_drug_offences	http://dbpedia.org/ontology/Work
+TRUE	http://yago-knowledge.org/resource/wikicategory_Sainik_schools	http://dbpedia.org/ontology/Organisation
+TRUE	http://yago-knowledge.org/resource/wikicategory_Saudi_Arabian_footballers	http://dbpedia.org/ontology/SoccerPlayer
+TRUE	http://yago-knowledge.org/resource/wikicategory_Films_directed_by_Malcolm_Ingram	http://dbpedia.org/ontology/Work
+TRUE	http://yago-knowledge.org/resource/wikicategory_Hill_stations_in_Burma	http://dbpedia.org/ontology/PopulatedPlace
+TRUE	http://yago-knowledge.org/resource/wikicategory_People_of_Liberian_descent	http://dbpedia.org/ontology/Person
+TRUE	http://yago-knowledge.org/resource/wikicategory_World_Indoor_Soccer_League_players	http://dbpedia.org/ontology/Athlete
+TRUE	http://yago-knowledge.org/resource/wikicategory_Photosensitizing_agents	http://dbpedia.org/ontology/ChemicalCompound
+FALSE	http://yago-knowledge.org/resource/wikicategory_Japanese_cigarette_brands	http://dbpedia.org/ontology/Animal
+TRUE	http://yago-knowledge.org/resource/wikicategory_Conflicts_in_1563	http://dbpedia.org/ontology/Event
+TRUE	http://yago-knowledge.org/resource/wikicategory_Ambassadors_of_Syria_to_Chile	http://dbpedia.org/ontology/Person
+TRUE	http://yago-knowledge.org/resource/wikicategory_Michael_Maxwell_albums	http://dbpedia.org/ontology/Work
+FALSE	http://yago-knowledge.org/resource/wikicategory_People_from_Cuenca_(province)	http://dbpedia.org/ontology/Governor
+TRUE	http://yago-knowledge.org/resource/wikicategory_Telecommunications_companies_of_Zimbabwe	http://dbpedia.org/ontology/Company
+TRUE	http://yago-knowledge.org/resource/wikicategory_South_Korean_child_actors	http://dbpedia.org/ontology/Person
+TRUE	http://yago-knowledge.org/resource/wikicategory_Amerie_songs	http://dbpedia.org/ontology/Single
+TRUE	http://yago-knowledge.org/resource/wikicategory_Napalm_Death_songs	http://dbpedia.org/ontology/Work
+FALSE	http://yago-knowledge.org/resource/wikicategory_City_halls_in_Australia	http://dbpedia.org/ontology/PopulatedPlace
+TRUE	http://yago-knowledge.org/resource/wikicategory_Townships_in_Champaign_County,_Ohio	http://dbpedia.org/ontology/PopulatedPlace
+TRUE	http://yago-knowledge.org/resource/wikicategory_People_from_Brazzaville	http://dbpedia.org/ontology/Person
+TRUE	http://yago-knowledge.org/resource/wikicategory_Lieutenant_Governors_of_Rhode_Island	http://dbpedia.org/ontology/Governor
+TRUE	http://yago-knowledge.org/resource/wikicategory_Mando_Diao_albums	http://dbpedia.org/ontology/Album
+FALSE	http://yago-knowledge.org/resource/wikicategory_Canals_in_Pakistan	http://dbpedia.org/ontology/PopulatedPlace
+TRUE	http://yago-knowledge.org/resource/wikicategory_Live_jazz_fusion_albums	http://dbpedia.org/ontology/Album
+FALSE	http://yago-knowledge.org/resource/wikicategory_Ohio_Glory_players	http://dbpedia.org/ontology/Actor
+TRUE	http://yago-knowledge.org/resource/wikicategory_Townships_in_Edgar_County,_Illinois	http://dbpedia.org/ontology/Place
+TRUE	http://yago-knowledge.org/resource/wikicategory_Further_education_colleges_in_Berkshire	http://dbpedia.org/ontology/PopulatedPlace
+TRUE	http://yago-knowledge.org/resource/wikicategory_Pakistani_expatriates_in_Kenya	http://dbpedia.org/ontology/Person
+TRUE	http://yago-knowledge.org/resource/wikicategory_CunninLynguists_albums	http://dbpedia.org/ontology/Album
+TRUE	http://yago-knowledge.org/resource/wikicategory_Presidents_of_the_University_of_Virginia	http://dbpedia.org/ontology/OfficeHolder
+FALSE	http://yago-knowledge.org/resource/wikicategory_Plays_by_Roger_Hall	http://dbpedia.org/ontology/Film
+TRUE	http://yago-knowledge.org/resource/wikicategory_People_from_Iberville_Parish,_Louisiana	http://dbpedia.org/ontology/Person
+TRUE	http://yago-knowledge.org/resource/wikicategory_National_museums_of_Iceland	http://dbpedia.org/ontology/Company
+FALSE	http://yago-knowledge.org/resource/wikicategory_Australian_people_of_Swiss_descent	http://dbpedia.org/ontology/RugbyPlayer
+TRUE	http://yago-knowledge.org/resource/wikicategory_Latvian_women_writers	http://dbpedia.org/ontology/Writer
+TRUE	http://yago-knowledge.org/resource/wikicategory_Olympic_sailors_of_Mexico	http://dbpedia.org/ontology/Athlete
+TRUE	http://yago-knowledge.org/resource/wikicategory_Altaria_albums	http://dbpedia.org/ontology/Album
+TRUE	http://yago-knowledge.org/resource/wikicategory_History_museums_in_Minnesota	http://dbpedia.org/ontology/HistoricPlace
+TRUE	http://yago-knowledge.org/resource/wikicategory_Washington_&_Jefferson_Presidents_football_players	http://dbpedia.org/ontology/Person
+TRUE	http://yago-knowledge.org/resource/wikicategory_Cara_Jones_albums	http://dbpedia.org/ontology/Work
+TRUE	http://yago-knowledge.org/resource/wikicategory_Ryan's_Fancy_albums	http://dbpedia.org/ontology/Album
+TRUE	http://yago-knowledge.org/resource/wikicategory_Educational_institutions_disestablished_in_2003	http://dbpedia.org/ontology/Organisation
+FALSE	http://yago-knowledge.org/resource/wikicategory_Agriculture_companies_of_Poland	http://dbpedia.org/ontology/Species
+TRUE	http://yago-knowledge.org/resource/wikicategory_Districts_of_the_Northern_Cape	http://dbpedia.org/ontology/Place
+TRUE	http://yago-knowledge.org/resource/wikicategory_Poison_Clan_albums	http://dbpedia.org/ontology/Album
+FALSE	http://yago-knowledge.org/resource/wikicategory_Winthrop_University_alumni	http://dbpedia.org/ontology/GolfPlayer
+http://yago-knowledge.org/resource/wikicategory_AS_Cherbourg_Football_managers	http://dbpedia.org/ontology/SoccerManager
+http://yago-knowledge.org/resource/wikicategory_Jonatha_Brooke_albums	http://dbpedia.org/ontology/MusicalWork
+http://yago-knowledge.org/resource/wikicategory_South_African_herpetologists	http://dbpedia.org/ontology/Person
+http://yago-knowledge.org/resource/wikicategory_Santur_players	http://dbpedia.org/ontology/MusicalArtist
+http://yago-knowledge.org/resource/wikicategory_Aga_Khan_schools	http://dbpedia.org/ontology/Organisation
+http://yago-knowledge.org/resource/wikicategory_Sigh_albums	http://dbpedia.org/ontology/Work
+http://yago-knowledge.org/resource/wikicategory_Koop_albums	http://dbpedia.org/ontology/Work
+http://yago-knowledge.org/resource/wikicategory_Rob_Sonic_albums	http://dbpedia.org/ontology/Album
+http://yago-knowledge.org/resource/wikicategory_Carried_Away_albums	http://dbpedia.org/ontology/Album
+http://yago-knowledge.org/resource/wikicategory_English_Disciples_of_Christ	http://dbpedia.org/ontology/Person
+http://yago-knowledge.org/resource/wikicategory_Films_directed_by_Michael_Sarne	http://dbpedia.org/ontology/Work
+http://yago-knowledge.org/resource/wikicategory_Windsor_Lancers_football_players	http://dbpedia.org/ontology/Athlete
+http://yago-knowledge.org/resource/wikicategory_Amtrak_stations_in_Santa_Barbara_County,_California	http://dbpedia.org/ontology/Species
+http://yago-knowledge.org/resource/wikicategory_Films_directed_by_George_King	http://dbpedia.org/ontology/Film
+http://yago-knowledge.org/resource/wikicategory_Airports_in_Belgorod_Oblast	http://dbpedia.org/ontology/Building
+http://yago-knowledge.org/resource/wikicategory_Racehorse_owners_and_breeders	http://dbpedia.org/ontology/Company
+http://yago-knowledge.org/resource/wikicategory_Cemeteries_in_the_Netherlands	http://dbpedia.org/ontology/Place
+http://yago-knowledge.org/resource/wikicategory_Australian_theatre_managers_and_producers	http://dbpedia.org/ontology/OfficeHolder
+http://yago-knowledge.org/resource/wikicategory_Arts_in_Africa	http://dbpedia.org/ontology/Place
+http://yago-knowledge.org/resource/wikicategory_Films_directed_by_Mario_Sábato	http://dbpedia.org/ontology/Film
+http://yago-knowledge.org/resource/wikicategory_People_from_Elsecar	http://dbpedia.org/ontology/SoccerPlayer
+http://yago-knowledge.org/resource/wikicategory_UNC_Greensboro_Spartans_men's_basketball_players	http://dbpedia.org/ontology/CollegeCoach
+http://yago-knowledge.org/resource/wikicategory_Hip_hop_albums_by_Czech_artists	http://dbpedia.org/ontology/MusicalWork
+http://yago-knowledge.org/resource/wikicategory_Australian_naval_historians	http://dbpedia.org/ontology/Actor
+http://yago-knowledge.org/resource/wikicategory_Calvin_Harris_albums	http://dbpedia.org/ontology/Album
+http://yago-knowledge.org/resource/wikicategory_British_polo_players	http://dbpedia.org/ontology/SoccerPlayer
+http://yago-knowledge.org/resource/wikicategory_Canberra_City_SC_players	http://dbpedia.org/ontology/Person
+http://yago-knowledge.org/resource/wikicategory_Arravale_Rovers_hurlers	http://dbpedia.org/ontology/Person
+http://yago-knowledge.org/resource/wikicategory_Divino_albums	http://dbpedia.org/ontology/MusicalWork
+http://yago-knowledge.org/resource/wikicategory_Counts_of_Habsburg	http://dbpedia.org/ontology/Person
+http://yago-knowledge.org/resource/wikicategory_Bridgeport_Hungaria_players	http://dbpedia.org/ontology/Athlete
+http://yago-knowledge.org/resource/wikicategory_Jeffrey_Osborne_songs	http://dbpedia.org/ontology/Work
+http://yago-knowledge.org/resource/wikicategory_Jake_Owen_albums	http://dbpedia.org/ontology/Work
+http://yago-knowledge.org/resource/wikicategory_Accountancy_firms_of_Canada	http://dbpedia.org/ontology/Organisation
+http://yago-knowledge.org/resource/wikicategory_Pro-choice_organizations_in_Australia	http://dbpedia.org/ontology/Organisation
+http://yago-knowledge.org/resource/wikicategory_Irish_darts_players	http://dbpedia.org/ontology/Work
+http://yago-knowledge.org/resource/wikicategory_Dinah_Shore_albums	http://dbpedia.org/ontology/Album
+http://yago-knowledge.org/resource/wikicategory_Saginaw_Jacks_players	http://dbpedia.org/ontology/BaseballPlayer
+http://yago-knowledge.org/resource/wikicategory_Robert_Walter_albums	http://dbpedia.org/ontology/Album
+http://yago-knowledge.org/resource/wikicategory_Modern_Skirts_albums	http://dbpedia.org/ontology/Work
+http://yago-knowledge.org/resource/wikicategory_Paralympic_silver_medalists_for_Norway	http://dbpedia.org/ontology/Person
+http://yago-knowledge.org/resource/wikicategory_Bridges_completed_in_1944	http://dbpedia.org/ontology/Bridge
+http://yago-knowledge.org/resource/wikicategory_Metropolis_Records_singles	http://dbpedia.org/ontology/MusicalWork
+http://yago-knowledge.org/resource/wikicategory_Wetlands_of_Jordan	http://dbpedia.org/ontology/ProtectedArea
+http://yago-knowledge.org/resource/wikicategory_Terminator_X_albums	http://dbpedia.org/ontology/MusicalWork
+http://yago-knowledge.org/resource/wikicategory_MacMurray_College_alumni	http://dbpedia.org/ontology/OfficeHolder
+http://yago-knowledge.org/resource/wikicategory_Earth_observation_companies_of_Norway	http://dbpedia.org/ontology/Organisation
+http://yago-knowledge.org/resource/wikicategory_Operas_by_Rufus_Wainwright	http://dbpedia.org/ontology/Organisation
+http://yago-knowledge.org/resource/wikicategory_Echobelly_albums	http://dbpedia.org/ontology/Album
+http://yago-knowledge.org/resource/wikicategory_Earl_Scruggs_albums	http://dbpedia.org/ontology/Album
+http://yago-knowledge.org/resource/wikicategory_Električni_orgazam_songs	http://dbpedia.org/ontology/Single
+http://yago-knowledge.org/resource/wikicategory_Health_care_companies_of_Switzerland	http://dbpedia.org/ontology/Company
+http://yago-knowledge.org/resource/wikicategory_Entertainment_companies_of_Malaysia	http://dbpedia.org/ontology/Company
+http://yago-knowledge.org/resource/wikicategory_Vivian_Girls_albums	http://dbpedia.org/ontology/Album
+http://yago-knowledge.org/resource/wikicategory_Counts_of_Trapani	http://dbpedia.org/ontology/BritishRoyalty
+http://yago-knowledge.org/resource/wikicategory_Jennifer_Batten_albums	http://dbpedia.org/ontology/Work
+http://yago-knowledge.org/resource/wikicategory_Classical_guitarists	http://dbpedia.org/ontology/PokerPlayer
+http://yago-knowledge.org/resource/wikicategory_Fires_in_Mexico	http://dbpedia.org/ontology/MilitaryConflict
+http://yago-knowledge.org/resource/wikicategory_2010_songs	http://dbpedia.org/ontology/Work
+http://yago-knowledge.org/resource/wikicategory_Zhao_Wei_albums	http://dbpedia.org/ontology/MusicalWork
+http://yago-knowledge.org/resource/wikicategory_Melba_Moore_albums	http://dbpedia.org/ontology/MusicalWork
+http://yago-knowledge.org/resource/wikicategory_Protected_areas_of_Sudan	http://dbpedia.org/ontology/Place
+http://yago-knowledge.org/resource/geoclass_abandoned_airfield	http://dbpedia.org/ontology/Airport
+
+
+TRUE	http://dbpedia.org/ontology/NascarDriver	http://yago-knowledge.org/resource/wikicategory_American_racecar_drivers
+TRUE	http://dbpedia.org/ontology/Athlete	http://yago-knowledge.org/resource/wordnet_organism_100004475
+TRUE	http://dbpedia.org/ontology/Place	http://yago-knowledge.org/resource/wordnet_geographical_area_108574314
+TRUE	http://dbpedia.org/ontology/Airport	http://yago-knowledge.org/resource/geoclass_airport
+TRUE	http://dbpedia.org/ontology/Settlement	http://yago-knowledge.org/resource/wordnet_city_108524735
+FALSE	http://dbpedia.org/ontology/EducationalInstitution	http://yago-knowledge.org/resource/wordnet_social_group_107950920
+TRUE	http://dbpedia.org/ontology/GolfPlayer	http://yago-knowledge.org/resource/wordnet_organism_100004475
+TRUE	http://dbpedia.org/ontology/Person	http://yago-knowledge.org/resource/wordnet_organism_100004475
+TRUE	http://dbpedia.org/ontology/Work	http://yago-knowledge.org/resource/wordnet_product_104007894
+TRUE	http://dbpedia.org/ontology/FormulaOneRacer	http://yago-knowledge.org/resource/wordnet_driver_110034906
+TRUE	http://dbpedia.org/ontology/Disease	http://yago-knowledge.org/resource/wordnet_state_100024720
+FALSE	http://dbpedia.org/ontology/MilitaryUnit	http://yago-knowledge.org/resource/wordnet_measure_100033615
+TRUE	http://dbpedia.org/ontology/SportsTeam	http://yago-knowledge.org/resource/wordnet_social_group_107950920
+FALSE	http://dbpedia.org/ontology/SoccerPlayer	http://yago-knowledge.org/resource/wikicategory_The_Football_League_players
+TRUE	http://dbpedia.org/ontology/TelevisionShow	http://yago-knowledge.org/resource/wordnet_action_100037396
+TRUE	http://dbpedia.org/ontology/Magazine	http://yago-knowledge.org/resource/wordnet_magazine_106595351
+TRUE	http://dbpedia.org/ontology/Book	http://yago-knowledge.org/resource/wordnet_book_106410904
+TRUE	http://dbpedia.org/ontology/Continent	http://yago-knowledge.org/resource/wordnet_location_100027167
+FALSE	http://dbpedia.org/ontology/Wrestler	http://yago-knowledge.org/resource/wikicategory_Living_people
+TRUE	http://dbpedia.org/ontology/Automobile	http://yago-knowledge.org/resource/wordnet_instrumentality_103575240
+TRUE	http://dbpedia.org/ontology/Language	http://yago-knowledge.org/resource/wordnet_language_106282651
+FALSE	http://dbpedia.org/ontology/BadmintonPlayer	http://yago-knowledge.org/resource/wordnet_medalist_110305062
+TRUE	http://dbpedia.org/ontology/SpaceMission	http://yago-knowledge.org/resource/wordnet_mission_108403225
+TRUE	http://dbpedia.org/ontology/LunarCrater	http://yago-knowledge.org/resource/wordnet_region_108630985
+TRUE	http://dbpedia.org/ontology/River	http://yago-knowledge.org/resource/wordnet_body_of_water_109225146
+TRUE	http://dbpedia.org/ontology/Island	http://yago-knowledge.org/resource/wordnet_location_100027167
+TRUE	http://dbpedia.org/ontology/Philosopher	http://yago-knowledge.org/resource/wordnet_scholar_110557854
+FALSE	http://dbpedia.org/ontology/WineRegion	http://yago-knowledge.org/resource/wikicategory_American_Viticultural_Areas
+TRUE	http://dbpedia.org/ontology/School	http://yago-knowledge.org/resource/wordnet_organization_108008335
+FALSE	http://dbpedia.org/ontology/Stream	http://yago-knowledge.org/resource/wikicategory_Rivers_of_Romania
+TRUE	http://dbpedia.org/ontology/Nerve	http://yago-knowledge.org/resource/wordnet_nerve_105474346
+TRUE	http://dbpedia.org/ontology/Film	http://yago-knowledge.org/resource/wordnet_creation_103129123
+TRUE	http://dbpedia.org/ontology/Company	http://yago-knowledge.org/resource/wordnet_social_group_107950920
+TRUE	http://dbpedia.org/ontology/Mountain	http://yago-knowledge.org/resource/wordnet_natural_elevation_109366317
+FALSE	http://dbpedia.org/ontology/SpaceStation	http://yago-knowledge.org/resource/wordnet_instrumentality_103575240
+FALSE	http://dbpedia.org/ontology/Country	http://yago-knowledge.org/resource/wordnet_district_108552138
+TRUE	http://dbpedia.org/ontology/MilitaryPerson	http://yago-knowledge.org/resource/wordnet_commissioned_military_officer_109943239
+FALSE	http://dbpedia.org/ontology/Actor	http://yago-knowledge.org/resource/wordnet_scholar_110557854
+TRUE	http://dbpedia.org/ontology/Cave	http://yago-knowledge.org/resource/wordnet_geological_formation_109287968
+FALSE	http://dbpedia.org/ontology/MeanOfTransportation	http://yago-knowledge.org/resource/wordnet_wheeled_vehicle_104576211
+TRUE	http://dbpedia.org/ontology/AdministrativeRegion	http://yago-knowledge.org/resource/wordnet_geographical_area_108574314
+FALSE	http://dbpedia.org/ontology/Restaurant	http://yago-knowledge.org/resource/wikicategory_Michelin_Guide_starred_restaurants_and_chefs
+FALSE	http://dbpedia.org/ontology/OfficeHolder	http://yago-knowledge.org/resource/wordnet_intellectual_109621545
+FALSE	http://dbpedia.org/ontology/Activity	http://yago-knowledge.org/resource/wordnet_social_event_107288639
+TRUE	http://dbpedia.org/ontology/WrestlingEvent	http://yago-knowledge.org/resource/wordnet_event_100029378
+FALSE	http://dbpedia.org/ontology/ChemicalCompound	http://yago-knowledge.org/resource/wordnet_concept_105835747
+TRUE	http://dbpedia.org/ontology/Comedian	http://yago-knowledge.org/resource/wordnet_organism_100004475
+TRUE	http://dbpedia.org/ontology/AdultActor	http://yago-knowledge.org/resource/wordnet_organism_100004475
+TRUE	http://dbpedia.org/ontology/College	http://yago-knowledge.org/resource/wordnet_structure_104341686
+TRUE	http://dbpedia.org/ontology/Archaea	http://yago-knowledge.org/resource/wikicategory_Archaea_genera
+TRUE	http://dbpedia.org/ontology/Species	http://yago-knowledge.org/resource/wordnet_organism_100004475
+TRUE	http://dbpedia.org/ontology/Artist	http://yago-knowledge.org/resource/wordnet_organism_100004475
+TRUE	http://dbpedia.org/ontology/MusicGenre	http://yago-knowledge.org/resource/wordnet_concept_105835747
+TRUE	http://dbpedia.org/ontology/Cleric	http://yago-knowledge.org/resource/wordnet_spiritual_leader_109505153
+TRUE	http://dbpedia.org/ontology/Weapon	http://yago-knowledge.org/resource/wordnet_device_103183080
+TRUE	http://dbpedia.org/ontology/Airline	http://yago-knowledge.org/resource/wordnet_carrier_108057633
+FALSE	http://dbpedia.org/ontology/Astronaut	http://yago-knowledge.org/resource/wordnet_alumnus_109786338
+TRUE	http://dbpedia.org/ontology/Broadcast	http://yago-knowledge.org/resource/wordnet_television_station_104406350
+TRUE	http://dbpedia.org/ontology/Saint	http://yago-knowledge.org/resource/wordnet_clergyman_109927451
+TRUE	http://dbpedia.org/ontology/Scientist	http://yago-knowledge.org/resource/wordnet_person_100007846
+TRUE	http://dbpedia.org/ontology/Monarch	http://yago-knowledge.org/resource/wordnet_representative_110522035
+TRUE	http://dbpedia.org/ontology/Mayor	http://yago-knowledge.org/resource/wordnet_person_100007846
+FALSE	http://dbpedia.org/ontology/Politician	http://yago-knowledge.org/resource/wikicategory_Living_people
+FALSE	http://dbpedia.org/ontology/Colour	http://yago-knowledge.org/resource/wordnet_semidarkness_113984285
+TRUE	http://dbpedia.org/ontology/Vein	http://yago-knowledge.org/resource/wordnet_tube_105246511
+FALSE	http://dbpedia.org/ontology/Locomotive	http://yago-knowledge.org/resource/wordnet_diesel_locomotive_103193597
+FALSE	http://dbpedia.org/ontology/CanadianFootballTeam	http://yago-knowledge.org/resource/wikicategory_Sports_clubs_disestablished_in_1995
+TRUE	http://dbpedia.org/ontology/AmericanFootballTeam	http://yago-knowledge.org/resource/wikicategory_American_Football_League_teams
+TRUE	http://dbpedia.org/ontology/Single	http://yago-knowledge.org/resource/wordnet_music_107020895
+FALSE	http://dbpedia.org/ontology/Eukaryote	http://yago-knowledge.org/resource/wordnet_animal_100015388
+TRUE	http://dbpedia.org/ontology/MilitaryConflict	http://yago-knowledge.org/resource/wordnet_act_100030358
+TRUE	http://dbpedia.org/ontology/Chancellor	http://yago-knowledge.org/resource/wordnet_organism_100004475
+TRUE	http://dbpedia.org/ontology/SportsEvent	http://yago-knowledge.org/resource/wordnet_event_100029378
+TRUE	http://dbpedia.org/ontology/AmericanFootballPlayer	http://yago-knowledge.org/resource/wordnet_player_110439851
+TRUE	http://dbpedia.org/ontology/Insect	http://yago-knowledge.org/resource/wordnet_animal_100015388
+TRUE	http://dbpedia.org/ontology/BaseballPlayer	http://yago-knowledge.org/resource/wordnet_ballplayer_109835506
+TRUE	http://dbpedia.org/ontology/PowerStation	http://yago-knowledge.org/resource/wordnet_facility_103315023
+TRUE	http://dbpedia.org/ontology/Writer	http://yago-knowledge.org/resource/wordnet_novelist_110363573
+TRUE	http://dbpedia.org/ontology/Muscle	http://yago-knowledge.org/resource/wordnet_organ_105297523
+TRUE	http://dbpedia.org/ontology/TennisPlayer	http://yago-knowledge.org/resource/wordnet_player_110439851
+FALSE	http://dbpedia.org/ontology/BasketballPlayer	http://yago-knowledge.org/resource/wikicategory_Living_people
+TRUE	http://dbpedia.org/ontology/Newspaper	http://yago-knowledge.org/resource/wordnet_newspaper_106267145
+TRUE	http://dbpedia.org/ontology/SiteOfSpecialScientificInterest	http://yago-knowledge.org/resource/wordnet_geographical_area_108574314
+TRUE	http://dbpedia.org/ontology/GaelicGamesPlayer	http://yago-knowledge.org/resource/wordnet_player_110439851
+TRUE	http://dbpedia.org/ontology/HistoricPlace	http://yago-knowledge.org/resource/wordnet_region_108630985
+TRUE	http://dbpedia.org/ontology/Beverage	http://yago-knowledge.org/resource/wordnet_substance_100019613
+TRUE	http://dbpedia.org/ontology/SoccerManager	http://yago-knowledge.org/resource/wordnet_organism_100004475
+TRUE	http://dbpedia.org/ontology/Judge	http://yago-knowledge.org/resource/wordnet_person_100007846
+FALSE	http://dbpedia.org/ontology/Congressman	http://yago-knowledge.org/resource/wikicategory_Living_people
+FALSE	http://dbpedia.org/ontology/FilmFestival	http://yago-knowledge.org/resource/wordnet_measure_100033615
+TRUE	http://dbpedia.org/ontology/MusicalArtist	http://yago-knowledge.org/resource/wordnet_organism_100004475
+TRUE	http://dbpedia.org/ontology/ProtectedArea	http://yago-knowledge.org/resource/wordnet_location_100027167
+FALSE	http://dbpedia.org/ontology/RecordLabel	http://yago-knowledge.org/resource/wordnet_speech_act_107160883
+FALSE	http://dbpedia.org/ontology/FigureSkater	http://yago-knowledge.org/resource/wikicategory_American_figure_skaters
+FALSE	http://dbpedia.org/ontology/President	http://yago-knowledge.org/resource/wordnet_clergyman_109927451
+TRUE	http://dbpedia.org/ontology/Cricketer	http://yago-knowledge.org/resource/wordnet_worker_109632518
+TRUE	http://dbpedia.org/ontology/Cardinal	http://yago-knowledge.org/resource/wordnet_spiritual_leader_109505153
+TRUE	http://dbpedia.org/ontology/Governor	http://yago-knowledge.org/resource/wordnet_skilled_worker_110605985
+FALSE	http://dbpedia.org/ontology/Pope	http://yago-knowledge.org/resource/wordnet_archbishop_109805151
+TRUE	http://dbpedia.org/ontology/Mollusca	http://yago-knowledge.org/resource/wordnet_organism_100004475
+TRUE	http://dbpedia.org/ontology/CollegeCoach	http://yago-knowledge.org/resource/wordnet_leader_109623038
+TRUE	http://dbpedia.org/ontology/PrimeMinister	http://yago-knowledge.org/resource/wordnet_person_100007846
+TRUE	http://dbpedia.org/ontology/Song	http://yago-knowledge.org/resource/wordnet_song_107048000
+TRUE	http://dbpedia.org/ontology/Artery	http://yago-knowledge.org/resource/wordnet_tube_105246511
+TRUE	http://dbpedia.org/ontology/GolfLeague	http://yago-knowledge.org/resource/wikicategory_Golf_associations
+TRUE	http://dbpedia.org/ontology/Musical	http://yago-knowledge.org/resource/wordnet_event_100029378
+FALSE	http://dbpedia.org/ontology/Hospital	http://yago-knowledge.org/resource/wikicategory_NHS_hospitals
+TRUE	http://dbpedia.org/ontology/Criminal	http://yago-knowledge.org/resource/wordnet_wrongdoer_109633969
+FALSE	http://dbpedia.org/ontology/Town	http://yago-knowledge.org/resource/wikicategory_Townships_in_Michigan
+TRUE	http://dbpedia.org/ontology/ChristianBishop	http://yago-knowledge.org/resource/wordnet_organism_100004475
+FALSE	http://dbpedia.org/ontology/GreenAlga	http://yago-knowledge.org/resource/wordnet_cognition_100023271
+TRUE	http://dbpedia.org/ontology/PokerPlayer	http://yago-knowledge.org/resource/wordnet_person_100007846
+TRUE	http://dbpedia.org/ontology/PlayboyPlaymate	http://yago-knowledge.org/resource/wordnet_organism_100004475
+TRUE	http://dbpedia.org/ontology/TennisLeague	http://yago-knowledge.org/resource/wordnet_association_108049401
+TRUE	http://dbpedia.org/ontology/Fungus	http://yago-knowledge.org/resource/wordnet_microorganism_101326291
+TRUE	http://dbpedia.org/ontology/Moss	http://yago-knowledge.org/resource/wordnet_nonvascular_organism_113084479
+TRUE	http://dbpedia.org/ontology/Currency	http://yago-knowledge.org/resource/wordnet_system_of_measurement_113577171
+TRUE	http://dbpedia.org/ontology/Model	http://yago-knowledge.org/resource/wordnet_person_100007846
+-http://dbpedia.org/ontology/Website	http://yago-knowledge.org/resource/wordnet_property_113244109
+TRUE	http://dbpedia.org/ontology/Valley	http://yago-knowledge.org/resource/wordnet_geological_formation_109287968
+TRUE	http://dbpedia.org/ontology/CanadianFootballLeague	http://yago-knowledge.org/resource/wikicategory_Sports_leagues_in_Canada
+FALSE	http://dbpedia.org/ontology/NationalCollegiateAthleticAssociationAthlete	http://yago-knowledge.org/resource/wikicategory_African_American_basketball_players
+FALSE	http://dbpedia.org/ontology/Senator	http://yago-knowledge.org/resource/wordnet_scholar_110557854
+FALSE	http://dbpedia.org/ontology/Monument	http://yago-knowledge.org/resource/wordnet_music_107020895
+TRUE	http://dbpedia.org/ontology/Game	http://yago-knowledge.org/resource/wordnet_event_100029378
+TRUE	http://dbpedia.org/ontology/Arachnid	http://yago-knowledge.org/resource/wordnet_arthropod_101767661
+TRUE	http://dbpedia.org/ontology/MemberOfParliament	http://yago-knowledge.org/resource/wordnet_organism_100004475
+TRUE	http://dbpedia.org/ontology/Bone	http://yago-knowledge.org/resource/wordnet_tissue_105267345
+TRUE	http://dbpedia.org/ontology/Conifer	http://yago-knowledge.org/resource/wordnet_plant_100017222
+TRUE	http://dbpedia.org/ontology/Ambassador	http://yago-knowledge.org/resource/wordnet_ambassador_109787534
+TRUE	http://dbpedia.org/ontology/Park	http://yago-knowledge.org/resource/wordnet_park_108615149
+TRUE	http://dbpedia.org/ontology/SpeedwayLeague	http://yago-knowledge.org/resource/wikicategory_Speedway_leagues
+FALSE	http://dbpedia.org/ontology/ComicsCreator	http://yago-knowledge.org/resource/wikicategory_Living_people
+FALSE	http://dbpedia.org/ontology/Convention	http://yago-knowledge.org/resource/wordnet_time_period_115113229
+TRUE	http://dbpedia.org/ontology/Bird	http://yago-knowledge.org/resource/wordnet_chordate_101466257
+TRUE	http://dbpedia.org/ontology/Reptile	http://yago-knowledge.org/resource/wordnet_organism_100004475
+TRUE	http://dbpedia.org/ontology/TradeUnion	http://yago-knowledge.org/resource/wordnet_union_108233056
+TRUE	http://dbpedia.org/ontology/ShoppingMall	http://yago-knowledge.org/resource/wordnet_building_102913152
+FALSE	http://dbpedia.org/ontology/Cyclist	http://yago-knowledge.org/resource/wikicategory_Living_people
