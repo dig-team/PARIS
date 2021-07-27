@@ -57,10 +57,9 @@ Each file will contain the first item (instance, class, or relation), the aligne
 Example: Aligning YAGO and DBpedia
 -------------------
 
-For archival purposes only, we show here how we used PARIS to align
-DBpedia (version from March 2012) and YAGO (version from January 2012), and how we compared this alignment to the gold standard. In the
-meantime, YAGO has been updated to use N3 format, so to use this newer version
-of YAGO, proceed rather as above.
+For archival purposes only, we show here how we used PARIS to align DBpedia (version from March 2012) and YAGO (version from January 2012), and how we compared this alignment to the gold standard. 
+
+*In the meantime, the data sources have changed in format and in content, and the original data sources are no longer avilable. We are currently unable to reproduce the results of the original experiments!*
 
 1. Retrieve the two knowledge bases:
 
