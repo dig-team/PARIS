@@ -25,7 +25,9 @@ See [here](https://suchanek.name/work/publications/vldb2012/index.html) for a sl
 PARIS today
 ----------
 
-PARIS dates from 2012. It has not been updated since, and it is no longer maintained. However, it still works, and it is used as a baseline for modern knowledge graph alignment (KG alignment) methods. PARIS differs from these methods in the following ways:
+PARIS dates from 2012. It has not been updated since, and it is no longer maintained. However, it still works, and it is used as a baseline for modern knowledge graph alignment (KG alignment) methods. In fact [a recent survey](https://www.vldb.org/pvldb/vol15/p1712-arora.pdf) concluded that “PARIS, the state-of-the-art non-neural method, statistically significantly outperforms all the representative state-of-the-art neural methods in terms of both efficacy and efficiency across a wide variety of dataset types and scenarios”, and that “PARIS should be used as a baseline in every follow-up work on Entity Alignment”.
+
+That said, any comparison has to consider the following differences between PARIS and entity alignment methods:
 1. PARIS aligns not just instances, but also relations and classes. That is: if one KB calls the relation `wasBornInCity`, and the other KB calls it `birthPlace`, then PARIS will find out that these relations are the same. This works also if one relation merely subsumes the other. The same goes for classes (finding, e.g., that `Singers` in one KB is a subclass of `Artists` in the other).
 2. PARIS deals also with relations whose objects are literals, such as `wasBornOnDate`, `hasNumberOfInhabitants`, etc.
 3. PARIS can deal with the situation where not all instances of one KB have a matching counterpart in the other KB.
