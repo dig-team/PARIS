@@ -1,8 +1,6 @@
 PARIS - Probabilistic Alignment of Relations, Instances, and Schema
 ===================================================================
 
-_PARIS has been superseded by our newer approach [FLORA](https://github.com/dig-team/FLORA)._
-
 PARIS is a system for the automatic alignment of RDF knowledge bases. PARIS aligns
 not only instances, but also relations and classes. Alignments at the instance
 level cross-fertilize with alignments at the schema level. Thereby, our system
